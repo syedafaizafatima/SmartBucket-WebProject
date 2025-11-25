@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Navbar as BootstrapNavbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { AuthContext } from '../../context/AuthContext';
 import { logout } from '../../services/authService';
+import NotificationBell from '../notifications/NotificationBell';
 
 const Navbar = () => {
   const { isAuthenticated, user, logout: logoutContext } = useContext(AuthContext);
@@ -25,6 +26,7 @@ const Navbar = () => {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/products">Products</Nav.Link>
             <Nav.Link as={Link} to="/recipes">Recipes</Nav.Link>
+            <Nav.Link as={Link} to="/group-buys">Group Buys</Nav.Link>
             <Nav.Link as={Link} to="/blog">Blog</Nav.Link>
             {isAuthenticated && (
               <>
@@ -39,11 +41,16 @@ const Navbar = () => {
           </Nav>
           <Nav>
             {isAuthenticated ? (
-              <NavDropdown title={user?.name || 'User'} id="user-nav-dropdown">
-                <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-              </NavDropdown>
+              <>
+                <Nav.Item className="d-flex align-items-center me-3">
+                  <NotificationBell />
+                </Nav.Item>
+                <NavDropdown title={user?.name || 'User'} id="user-nav-dropdown">
+                  <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                </NavDropdown>
+              </>
             ) : (
               <>
                 <Nav.Link as={Link} to="/login">Login</Nav.Link>

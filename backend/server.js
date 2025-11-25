@@ -48,7 +48,10 @@ app.get('/', (req, res) => {
       subscriptions: '/api/subscriptions',
       transactions: '/api/transactions',
       blogs: '/api/blogs',
-      admin: '/api/admin'
+      admin: '/api/admin',
+      reviews: '/api/reviews',
+      groupBuys: '/api/group-buys',
+      notifications: '/api/notifications'
     }
   });
 });
@@ -64,6 +67,9 @@ try {
   app.use('/api/transactions', require('./routes/transactionRoutes'));
   app.use('/api/blogs', require('./routes/blogRoutes'));
   app.use('/api/admin', require('./routes/adminRoutes'));
+  app.use('/api/reviews', require('./routes/reviewRoutes'));
+  app.use('/api/group-buys', require('./routes/groupBuyRoutes'));
+  app.use('/api/notifications', require('./routes/notificationRoutes'));
 } catch (error) {
   console.warn('Some routes may not be available:', error.message);
 }
