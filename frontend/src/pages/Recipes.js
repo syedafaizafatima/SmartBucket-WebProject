@@ -47,7 +47,18 @@ const Recipes = () => {
       if (dietaryFilter) params.dietaryTags = dietaryFilter;
       
       const response = await getRecipes(params);
-      setRecipes(response.data.data || []);
+      // Handle API response structure
+      let recipesData = [];
+      if (response) {
+        if (response.success && response.data && Array.isArray(response.data)) {
+          recipesData = response.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          recipesData = response.data;
+        } else if (Array.isArray(response)) {
+          recipesData = response;
+        }
+      }
+      setRecipes(recipesData);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load recipes');
     } finally {
@@ -58,7 +69,18 @@ const Recipes = () => {
   const loadRecommendedRecipes = async () => {
     try {
       const response = await getRecommendedRecipes();
-      setRecommendedRecipes(response.data.data || []);
+      // Handle API response structure
+      let recipesData = [];
+      if (response) {
+        if (response.success && response.data && Array.isArray(response.data)) {
+          recipesData = response.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          recipesData = response.data;
+        } else if (Array.isArray(response)) {
+          recipesData = response;
+        }
+      }
+      setRecommendedRecipes(recipesData);
     } catch (err) {
       console.error('Failed to load recommended recipes:', err);
     }
@@ -67,7 +89,18 @@ const Recipes = () => {
   const loadProducts = async () => {
     try {
       const response = await getProducts();
-      setProducts(response.data.data || []);
+      // Handle API response structure
+      let productsData = [];
+      if (response) {
+        if (response.success && response.data && Array.isArray(response.data)) {
+          productsData = response.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          productsData = response.data;
+        } else if (Array.isArray(response)) {
+          productsData = response;
+        }
+      }
+      setProducts(productsData);
     } catch (err) {
       console.error('Failed to load products:', err);
     }
@@ -170,13 +203,13 @@ const Recipes = () => {
     <Container className="my-5">
       <Row className="mb-4">
         <Col>
-          <h2>Recipes</h2>
+          <h2 className="fade-in">🍳 Recipes</h2>
           <p className="text-muted">Discover delicious recipes and cooking ideas</p>
         </Col>
         {user && user.role === 'admin' && (
           <Col className="text-end">
             <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-              Create Recipe
+              ➕ Create Recipe
             </Button>
           </Col>
         )}
@@ -218,7 +251,7 @@ const Recipes = () => {
               </Col>
               <Col md={2}>
                 <Button variant="primary" type="submit" className="w-100">
-                  Search
+                  🔍 Search
                 </Button>
               </Col>
             </Row>
@@ -237,14 +270,32 @@ const Recipes = () => {
             ) : (
               recipes.map((recipe) => (
                 <Col key={recipe._id} md={6} lg={4} className="mb-4">
-                  <Card className="h-100">
-                    {recipe.image && (
+                  <Card className="h-100 product-card">
+                    {recipe.image ? (
                       <Card.Img
                         variant="top"
                         src={recipe.image}
                         alt={recipe.name}
+                        className="product-image"
                         style={{ height: '200px', objectFit: 'cover' }}
+                        onError={(e) => {
+                          e.target.src = `https://source.unsplash.com/300x200/?recipe,${encodeURIComponent(recipe.name)}`;
+                        }}
                       />
+                    ) : (
+                      <div
+                        style={{
+                          height: '200px',
+                          background: `linear-gradient(135deg, var(--primary-color), var(--accent-purple))`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#ffffff',
+                          fontSize: '3rem'
+                        }}
+                      >
+                        🍳
+                      </div>
                     )}
                     <Card.Body>
                       <Card.Title>{recipe.name}</Card.Title>

@@ -1,1398 +1,264 @@
 ================================================================================
                     SMARTBASKET - COMPLETE SETUP GUIDE
-                    From Scratch to Running Application
 ================================================================================
 
-⚠️ IMPORTANT: This is the MAIN setup guide. All other documentation
-   files have been moved to the 'docs' folder for reference.
-
-✅ LATEST TEST: Both backend and frontend servers successfully tested
-   and running. This guide has been updated based on actual test run.
-
-================================================================================
-TABLE OF CONTENTS:
-================================================================================
-
-1. Dependencies & Extensions Required
-2. How to Run from Scratch on Visual Studio Code
-3. What Has Been Done
-4. What Is Left To Do
-5. File Structure & What Each File Does
-6. Troubleshooting
-7. Quick Reference Commands
-8. Testing Checklist
+QUICK START:
+1. Install Node.js (https://nodejs.org/) - LTS version
+2. Install MongoDB Atlas (free) OR local MongoDB
+3. Open project in VS Code
+4. Install dependencies: npm install (in both backend and frontend)
+5. Create .env files (see below)
+6. Run: npm start (in backend) and npm start (in frontend)
 
 ================================================================================
-1. DEPENDENCIES & EXTENSIONS REQUIRED
+1. INSTALL DEPENDENCIES & EXTENSIONS
 ================================================================================
 
-REQUIRED SOFTWARE (Install These First):
+REQUIRED SOFTWARE:
+- Node.js v16+ (includes npm) - https://nodejs.org/
+- MongoDB Atlas (free) - https://www.mongodb.com/cloud/atlas OR local MongoDB
+- Visual Studio Code - https://code.visualstudio.com/
 
-1. Node.js (v16 or higher recommended)
-   - Download from: https://nodejs.org/
-   - Install the LTS (Long Term Support) version
-   - Verify installation:
-     Open terminal/command prompt and run:
-     node --version    (should show v16.x.x or higher)
-     npm --version     (npm comes with Node.js)
-   
-   Note: npm (Node Package Manager) is automatically installed with Node.js
-
-2. MongoDB (Choose one option):
-   
-   OPTION A - Local MongoDB (For Development):
-   - Download from: https://www.mongodb.com/try/download/community
-   - Install MongoDB Community Server
-   - On Windows, MongoDB service usually starts automatically
-   - Default connection: mongodb://localhost:27017
-   - To manually start: net start MongoDB (Windows)
-   
-   OPTION B - MongoDB Atlas (Cloud - Recommended for Beginners):
-   - Go to: https://www.mongodb.com/cloud/atlas
-   - Create a free account
-   - Create a free cluster (M0 tier is free)
-   - Get connection string (mongodb+srv://...)
-   - Whitelist your IP address in Atlas dashboard
-   - No local installation needed
-
-3. Visual Studio Code (Recommended IDE)
-   - Download from: https://code.visualstudio.com/
-   - Free and open-source code editor
-   - Best for JavaScript/Node.js/React development
-
-4. Git (Optional but recommended)
-   - Download from: https://git-scm.com/
-   - Useful for version control
-
-VS CODE EXTENSIONS (Install These in VS Code):
-
-Open VS Code → Go to Extensions (Ctrl+Shift+X) → Search and install:
-
-1. ESLint
-   - JavaScript linting and code quality
-   - Helps catch errors and enforce code style
-
-2. Prettier - Code formatter
-   - Automatically formats your code
-   - Keeps code consistent and readable
-
-3. ES7+ React/Redux/React-Native snippets
-   - Provides code snippets for React development
-   - Saves time typing common React patterns
-
-4. Auto Rename Tag
-   - Automatically renames paired HTML/JSX tags
-   - When you rename <div>, it renames </div> too
-
-5. GitLens
-   - Enhanced Git integration
-   - Shows git blame, history, and more
-
-6. Thunder Client (or REST Client)
-   - Test API endpoints directly from VS Code
-   - Alternative to Postman
-
-7. MongoDB for VS Code (Optional - if using local MongoDB)
-   - Connect to MongoDB databases from VS Code
-   - Browse collections and documents
-
-BACKEND DEPENDENCIES (Installed via npm):
-
-These are automatically installed when you run "npm install" in the backend folder.
-They are listed in backend/package.json:
-
-   - express: ^4.18.2
-     → Web framework for Node.js, handles HTTP requests/responses
-   
-   - mongoose: ^7.5.0
-     → MongoDB object modeling tool (ODM), connects to MongoDB
-   
-   - mongodb: ^7.0.0
-     → Official MongoDB driver for Node.js
-   
-   - jsonwebtoken: ^9.0.2
-     → Creates and verifies JWT tokens for authentication
-   
-   - bcryptjs: ^2.4.3
-     → Hashes passwords securely before storing in database
-   
-   - cors: ^2.8.5
-     → Enables Cross-Origin Resource Sharing (allows frontend to call backend)
-   
-   - dotenv: ^16.3.1
-     → Loads environment variables from .env file
-
-FRONTEND DEPENDENCIES (Installed via npm):
-
-These are automatically installed when you run "npm install" in the frontend folder.
-They are listed in frontend/package.json:
-
-   - react: ^18.2.0
-     → JavaScript library for building user interfaces
-   
-   - react-dom: ^18.2.0
-     → React package for DOM rendering
-   
-   - react-router-dom: ^6.16.0
-     → Routing library for React applications
-   
-   - axios: ^1.5.0
-     → HTTP client for making API requests to backend
-   
-   - bootstrap: ^5.3.1
-     → CSS framework for responsive design
-   
-   - react-bootstrap: ^2.8.0
-     → Bootstrap components built for React
-   
-   - chart.js: ^4.4.0
-     → Charting library for data visualization
-   
-   - react-chartjs-2: ^5.2.0
-     → React wrapper for Chart.js
-   
-   - jspdf: ^2.5.1
-     → PDF generation library
-   
-   - react-scripts: 5.0.1 (dev dependency)
-     → Scripts and configuration for Create React App
+VS CODE EXTENSIONS (Optional but helpful):
+- ESLint
+- Prettier
+- ES7+ React/Redux snippets
+- GitLens
 
 ================================================================================
-2. HOW TO RUN FROM SCRATCH ON VISUAL STUDIO CODE
+2. SETUP IN VISUAL STUDIO CODE
 ================================================================================
 
-This section will guide you through setting up and running the entire
-application from scratch using Visual Studio Code.
+STEP 1: Open Project
+- File → Open Folder → Select "web project 1" folder
 
-STEP 1: Open Project in VS Code
+STEP 2: Install Backend Dependencies
+- Terminal → New Terminal (Ctrl + `)
+- cd backend
+- npm install
 
-   1. Open Visual Studio Code
-   2. Click: File → Open Folder
-   3. Navigate to and select the "web project 1" folder
-   4. You should see the folder structure in the left sidebar:
-      - backend/ folder
-      - frontend/ folder
-      - COMPLETE_SETUP_GUIDE.txt
-      - docs/ folder
+STEP 3: Install Frontend Dependencies
+- Terminal → New Terminal (Ctrl + Shift + `)
+- cd frontend
+- npm install
 
-STEP 2: Install Node.js Dependencies
+STEP 4: Create .env Files
 
-   A) Install Backend Dependencies:
+A) Backend .env (backend/.env):
+   Create file: backend/.env
+   Add these lines:
    
-      1. Open terminal in VS Code:
-         - Press: Ctrl + ` (backtick key, usually above Tab)
-         - OR: Terminal → New Terminal
-      
-      2. Navigate to backend folder:
-         cd backend
-      
-      3. Install dependencies:
-         npm install
-      
-      4. Wait for installation to complete (may take 1-3 minutes)
-         You should see: "added X packages"
-      
-      5. Verify installation:
-         Check that "node_modules" folder was created in backend/
-   
-   B) Install Frontend Dependencies:
-   
-      1. Open a NEW terminal (keep backend terminal open):
-         - Press: Ctrl + Shift + ` (opens new terminal)
-         - OR: Terminal → New Terminal
-      
-      2. Navigate to frontend folder:
-         cd frontend
-      
-      3. Install dependencies:
-         npm install
-      
-      4. Wait for installation to complete (may take 2-5 minutes)
-         You should see: "added X packages"
-      
-      5. Verify installation:
-         Check that "node_modules" folder was created in frontend/
+   PORT=5000
+   NODE_ENV=development
+   MONGODB_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/smartbasket?retryWrites=true&w=majority
+   JWT_SECRET=YOUR_JWT_SECRET_KEY_HERE
+   JWT_EXPIRE=7d
+   FRONTEND_URL=http://localhost:3000
 
-STEP 3: Create Environment Files
-
-   A) Create Backend .env File:
+B) Frontend .env (frontend/.env):
+   Create file: frontend/.env
+   Add this line:
    
-      Method 1 - Using PowerShell (Recommended):
-      1. Open terminal in VS Code (Ctrl + `)
-      2. Make sure you're in project root (not in backend or frontend folder)
-      3. Run this command:
-         Copy-Item "backend\env.example.txt" "backend\.env"
-      
-      Method 2 - Manual:
-      1. In VS Code, navigate to backend/ folder
-      2. Find "env.example.txt" file
-      3. Right-click → Copy
-      4. Right-click in backend folder → New File
-      5. Name it exactly: .env (with the dot at the beginning)
-      6. Paste the contents from env.example.txt
-   
-      Edit the .env file with your settings:
-      - PORT=5000 (backend server port)
-      - NODE_ENV=development
-      - MONGODB_URI=mongodb://localhost:27017/smartbasket
-        (OR use MongoDB Atlas: mongodb+srv://username:password@cluster.mongodb.net/smartbasket)
-      - JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
-      - JWT_EXPIRE=7d
-      - FRONTEND_URL=http://localhost:3000
-   
-   B) Create Frontend .env File:
-   
-      Method 1 - Using PowerShell:
-      1. In terminal (project root):
-         Copy-Item "frontend\env.example.txt" "frontend\.env"
-      
-      Method 2 - Manual:
-      1. Navigate to frontend/ folder
-      2. Find "env.example.txt" file
-      3. Copy it and rename to ".env"
-      4. Edit the .env file:
-         REACT_APP_API_URL=http://localhost:5000/api
-
-STEP 4: Set Up MongoDB
-
-   OPTION A - Using Local MongoDB:
-   
-      1. Ensure MongoDB is installed (see Dependencies section)
-      2. Start MongoDB service:
-         - Open PowerShell as Administrator
-         - Run: net start MongoDB
-         - OR check Services (services.msc) - MongoDB should be running
-      3. Verify MongoDB is running:
-         - Backend will connect automatically when started
-   
-   OPTION B - Using MongoDB Atlas (Cloud):
-   
-      1. Create account at https://www.mongodb.com/cloud/atlas
-      2. Create a free cluster
-      3. Get connection string from Atlas dashboard
-      4. Update MONGODB_URI in backend/.env with your Atlas connection string
-      5. Whitelist your IP address in Atlas dashboard
-
-STEP 5: Start Backend Server
-
-   1. Open terminal in VS Code (Terminal 1):
-      - Press: Ctrl + ` (if no terminal open)
-      - OR: Terminal → New Terminal
-   
-   2. Navigate to backend folder:
-      cd backend
-   
-   3. Start the server:
-      npm start
-   
-   4. Expected output:
-      ✓ "Server is running on port 5000"
-      ✓ "MongoDB Connected: ..." (if MongoDB is running)
-      ✓ OR "MongoDB connection error: ..." (if MongoDB not running - server still works)
-   
-   5. Keep this terminal open and running
-      - DO NOT close this terminal
-      - The server must keep running
-   
-   6. Verify backend is running:
-      - Open browser: http://localhost:5000
-      - Should see JSON response with API information
-      - If you see JSON, backend is working! ✅
-
-STEP 6: Start Frontend Server
-
-   1. Open a NEW terminal in VS Code (Terminal 2):
-      - Press: Ctrl + Shift + ` (opens new terminal)
-      - OR: Terminal → New Terminal
-      - IMPORTANT: Keep Terminal 1 (backend) running!
-   
-   2. Navigate to frontend folder:
-      cd frontend
-   
-   3. Start the React app:
-      npm start
-   
-   4. Expected output:
-      - Compilation starts (you'll see progress messages)
-      - Takes 30-60 seconds on first run (be patient!)
-      - "Compiled successfully!" message appears
-      - Browser automatically opens to http://localhost:3000
-   
-   5. Keep this terminal open and running
-      - DO NOT close this terminal
-      - The frontend server must keep running
-   
-   6. Verify frontend is running:
-      - Browser should open automatically
-      - If not, manually go to: http://localhost:3000
-      - You should see the SmartBasket homepage ✅
-
-STEP 7: Verify Everything Works
-
-   Now you should have:
-   - ✅ Backend running on http://localhost:5000
-   - ✅ Frontend running on http://localhost:3000
-   - ✅ Two terminals open (one for backend, one for frontend)
-   
-   Test the application:
-   1. In browser (http://localhost:3000):
-      - Try clicking around the navigation
-      - Try registering a new user
-      - Try logging in
-      - Browse products (if database is seeded)
-   
-   2. Check backend API:
-      - Go to: http://localhost:5000
-      - Should see JSON with all available API endpoints
-
-STEP 8: (Optional) Seed Database with Sample Products
-
-   If you want sample products in the database:
-   
-   1. Open a NEW terminal (or use backend terminal if you stop the server)
-   2. Navigate to backend folder:
-      cd backend
-   3. Run seed script:
-      npm run seed
-   4. You should see:
-      "Connected to MongoDB"
-      "Cleared existing products"
-      "Seeded X products successfully"
-   5. Restart backend server (if you stopped it):
-      npm start
-
-HOW TO STOP THE SERVERS:
-
-   When you're done working:
-   1. Go to Terminal 1 (backend):
-      - Press: Ctrl + C
-      - This stops the backend server
-   
-   2. Go to Terminal 2 (frontend):
-      - Press: Ctrl + C
-      - This stops the frontend server
-   
-   3. Both servers are now stopped
-
-QUICK START SUMMARY:
-
-   1. Open project in VS Code
-   2. Terminal 1: cd backend → npm install → npm start
-   3. Terminal 2: cd frontend → npm install → npm start
-   4. Wait for both to start
-   5. Open browser: http://localhost:3000
-   6. Done! ✅
+   REACT_APP_API_URL=http://localhost:5000/api
 
 ================================================================================
-3. WHAT HAS BEEN DONE
+3. GET MONGODB URI AND PASSWORD
 ================================================================================
 
-✅ Backend (Node.js/Express) - COMPLETE:
+OPTION A: MongoDB Atlas (Recommended - Free):
+1. Go to https://www.mongodb.com/cloud/atlas
+2. Sign up for free account
+3. Create a free cluster (M0 tier)
+4. Click "Connect" → "Connect your application"
+5. Copy the connection string
+6. Replace <password> with your database password
+7. Replace <dbname> with "smartbasket"
+8. Example: mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/smartbasket
+9. Add your IP to whitelist (Network Access → Add IP Address)
 
-   Server Setup:
-   - Complete Express server setup with MongoDB connection
-   - CORS configuration for frontend communication
-   - Error handling middleware
-   - File upload middleware (ready for Cloudinary integration)
-   - Environment variable configuration
-   - All API routes registered and working
-
-   Authentication & Security:
-   - JWT token-based authentication system
-   - Password hashing with bcryptjs
-   - Protected routes with authentication middleware
-   - Admin authorization middleware
-   - Secure token generation and verification
-
-   User Management:
-   - User registration with validation
-   - User login with JWT tokens
-   - User profile management
-   - User authentication context
-
-   Product Management:
-   - Complete CRUD operations (Create, Read, Update, Delete)
-   - Product listing and filtering
-   - Product detail views
-   - Product search functionality
-
-   Shopping Features:
-   - Shopping list creation and management
-   - Add/remove items from shopping lists
-   - Multiple shopping lists per user
-
-   Recipe Management:
-   - Recipe creation and storage
-   - Recipe listing and details
-   - Recipe search functionality
-
-   Subscription System:
-   - Subscription creation and management
-   - Subscription tracking
-   - Subscription renewal handling
-
-   Payment & Transactions:
-   - Transaction recording
-   - Payment processing structure (ready for Stripe integration)
-   - Transaction history
-
-   Blog System:
-   - Blog post creation and management
-   - Blog post listing
-   - Blog post details and comments
-
-   Review System:
-   - Product review creation
-   - Review display and ratings
-   - Review management
-
-   Group Buy Feature:
-   - Group buy creation
-   - Group buy participation
-   - Group buy management
-
-   Notification System:
-   - User notifications
-   - Notification delivery
-   - Notification management
-
-   Admin Features:
-   - Admin dashboard
-   - Analytics and statistics
-   - User management
-   - Content moderation
-
-✅ Frontend (React) - COMPLETE:
-
-   Application Structure:
-   - React application with React Router for navigation
-   - Authentication context for global auth state
-   - Protected routes for authenticated pages
-   - Responsive design with Bootstrap
-
-   Pages Implemented:
-   - Home page with welcome content
-   - Login page with authentication
-   - Register page for new users
-   - Products listing page
-   - Product detail page
-   - Shopping Lists page
-   - Recipes page
-   - Subscriptions page
-   - Financial Dashboard page
-   - Blog page
-   - Group Buys page
-   - Group Buy Detail page
-   - Notifications page
-   - Admin Dashboard page
-   - User Profile page
-
-   Components Created:
-   - Navigation bar (Navbar) with user menu
-   - Footer component
-   - Product cards for displaying products
-   - Review components (cards, forms, sections)
-   - Group buy cards
-   - Notification bell component
-   - Protected route component
-
-   API Integration:
-   - Complete API service layer with axios
-   - Service files for each feature:
-     * authService.js - Authentication
-     * productService.js - Products
-     * userService.js - User management
-     * shoppingListService.js - Shopping lists
-     * recipeService.js - Recipes
-     * subscriptionService.js - Subscriptions
-     * transactionService.js - Transactions
-     * blogService.js - Blog
-     * reviewService.js - Reviews
-     * groupBuyService.js - Group buys
-     * notificationService.js - Notifications
-     * adminService.js - Admin features
-   - Automatic JWT token attachment to requests
-   - Error handling and 401 redirects
-
-   UI/UX:
-   - Bootstrap 5.3.1 for styling
-   - React Bootstrap components
-   - Chart.js integration for analytics
-   - Responsive navigation
-   - User-friendly forms and inputs
-
-✅ Project Structure:
-   - Organized MVC (Model-View-Controller) pattern
-   - Separate backend and frontend folders
-   - Environment variable templates (env.example.txt)
-   - Package.json files with all dependencies
-   - Proper file organization and naming conventions
-
-✅ Database Models:
-   - User model with authentication fields
-   - Product model with all necessary fields
-   - ShoppingList model
-   - Recipe model
-   - Subscription model
-   - Transaction model
-   - Blog model
-   - Review model
-   - GroupBuy model
-   - Notification model
-
-✅ API Routes:
-   - All routes implemented and tested
-   - Proper HTTP methods (GET, POST, PUT, DELETE)
-   - Authentication middleware applied where needed
-   - Admin middleware for admin-only routes
+OPTION B: Local MongoDB:
+1. Install MongoDB Community Server
+2. Start service: net start MongoDB (Windows)
+3. Use: mongodb://localhost:27017/smartbasket
 
 ================================================================================
-4. WHAT IS LEFT TO DO
+4. GET JWT SECRET KEY
 ================================================================================
 
-⚠️ CRITICAL SETUP STEPS (Must Do Before Running):
+Generate a secure random string. Options:
 
-   1. Install Node.js and npm
-      - Download from https://nodejs.org/
-      - Verify: node --version and npm --version
+METHOD 1: Online Generator
+- Go to https://randomkeygen.com/
+- Copy a "CodeIgniter Encryption Keys" (64 characters)
+- Use this as your JWT_SECRET
 
-   2. Install MongoDB (local or Atlas)
-      - Local: Download MongoDB Community Server
-      - OR Atlas: Create free MongoDB Atlas account
-      - Update MONGODB_URI in backend/.env
+METHOD 2: Node.js Command
+- Open terminal
+- Run: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+- Copy the output (64 characters)
+- Use this as your JWT_SECRET
 
-   3. Create .env files
-      - Copy env.example.txt to .env in both backend and frontend folders
-      - Edit with your configuration (MongoDB URI, JWT secret, etc.)
+METHOD 3: Manual (Simple)
+- Create any long random string (at least 32 characters)
+- Example: VXzOLMmfIUwKiSY9nlpGg7J1oZQkyDra1234567890abcdefghijklmnop
 
-   4. Install dependencies
-      - Run: npm install in backend folder
-      - Run: npm install in frontend folder
-
-   5. Start MongoDB service (if using local MongoDB)
-      - Windows: net start MongoDB
-      - OR use MongoDB Atlas (no local service needed)
-
-   6. Seed database (optional but recommended)
-      - Run: npm run seed in backend folder
-      - This adds sample products to database
-
-⚠️ OPTIONAL BUT RECOMMENDED:
-
-   1. Set up Cloudinary account
-      - For product image uploads
-      - Add Cloudinary credentials to backend/.env
-      - Currently file upload middleware is ready but not configured
-
-   2. Set up Stripe account
-      - For real payment processing
-      - Add Stripe keys to backend/.env
-      - Currently transaction system is ready but uses test mode
-
-   3. Configure production environment
-      - Set NODE_ENV=production
-      - Use secure JWT_SECRET
-      - Configure production MongoDB
-      - Set up proper CORS origins
-
-   4. Set up database backups
-      - Regular backups of MongoDB
-      - Especially important for production
-
-   5. Add more seed data
-      - More products
-      - Sample users
-      - Sample recipes
-      - Sample blog posts
-
-⚠️ FUTURE ENHANCEMENTS (Not Required):
-
-   1. Email notifications
-      - Send emails for order confirmations
-      - Password reset emails
-      - Newsletter subscriptions
-
-   2. Image optimization
-      - Compress uploaded images
-      - Generate thumbnails
-      - CDN integration
-
-   3. Search functionality
-      - Full-text search for products
-      - Advanced filtering options
-      - Search suggestions
-
-   4. Payment gateway integration
-      - Complete Stripe integration
-      - Multiple payment methods
-      - Payment history
-
-   5. Mobile app
-      - React Native version
-      - Mobile-optimized UI
-
-   6. Testing
-      - Unit tests
-      - Integration tests
-      - End-to-end tests
-
-   7. Performance optimization
-      - Caching
-      - Database indexing
-      - API response optimization
-
-⚠️ KNOWN FIXES APPLIED:
-
-   - ✅ Fixed: notificationRoutes.js - Changed 'authorize' to 'admin' middleware
-   - ✅ All routes properly configured
-   - ✅ MongoDB connection handling improved
-   - ✅ Error handling middleware in place
+IMPORTANT: Keep JWT_SECRET secret! Don't share it publicly.
 
 ================================================================================
-5. FILE STRUCTURE & WHAT EACH FILE DOES
+5. RUN THE APPLICATION
 ================================================================================
 
-PROJECT ROOT STRUCTURE:
+TERMINAL 1 - Backend:
+- cd backend
+- npm start
+- Should see: "Server is running on port 5000"
+- Keep this terminal open
 
-web project 1/
-├── backend/                    # Backend Node.js/Express application
-│   ├── config/                 # Configuration files
-│   ├── controllers/            # Business logic (request handlers)
-│   ├── middleware/             # Custom middleware functions
-│   ├── models/                 # Database schemas (Mongoose models)
-│   ├── routes/                 # API route definitions
-│   ├── utils/                  # Utility scripts
-│   ├── server.js              # Main server entry point
-│   ├── package.json           # Backend dependencies
-│   ├── .env                   # Backend environment variables (create this)
-│   └── env.example.txt        # Template for .env file
-│
-├── frontend/                   # Frontend React application
-│   ├── public/                 # Static files
-│   ├── src/                    # Source code
-│   │   ├── components/         # Reusable React components
-│   │   ├── context/            # React context providers
-│   │   ├── pages/              # Page components
-│   │   ├── services/           # API service functions
-│   │   ├── App.js             # Main React component
-│   │   ├── index.js           # React entry point
-│   │   └── index.css          # Global styles
-│   ├── package.json           # Frontend dependencies
-│   ├── .env                   # Frontend environment variables (create this)
-│   └── env.example.txt        # Template for .env file
-│
-├── docs/                       # Additional documentation (moved here)
-├── COMPLETE_SETUP_GUIDE.txt   # This file - main setup guide
+TERMINAL 2 - Frontend:
+- cd frontend
+- npm start
+- Browser opens automatically to http://localhost:3000
+- Keep this terminal open
 
-BACKEND FILES EXPLAINED:
+VERIFY:
+- Backend: http://localhost:5000 (should show JSON)
+- Frontend: http://localhost:3000 (should show homepage)
 
-config/database.js:
-   - MongoDB connection function
-   - Uses mongoose to connect to MongoDB
-   - Handles connection errors gracefully
-   - Exports connection function (currently not used, connection in server.js)
-
-controllers/ (Business Logic):
-   
-   adminController.js:
-   - Admin dashboard statistics
-   - User management functions
-   - Analytics and reporting
-   - System statistics
-   
-   authController.js:
-   - User registration (creates new users)
-   - User login (authenticates and returns JWT token)
-   - User logout (token invalidation)
-   - Password hashing and verification
-   
-   blogController.js:
-   - Create, read, update, delete blog posts
-   - Blog post listing with pagination
-   - Blog post search functionality
-   
-   groupBuyController.js:
-   - Create group buy events
-   - Join/leave group buys
-   - Get group buy details
-   - Manage group buy participants
-   
-   notificationController.js:
-   - Create notifications
-   - Get user notifications
-   - Mark notifications as read
-   - Delete notifications
-   
-   productController.js:
-   - Create, read, update, delete products
-   - Product listing with filters
-   - Product search
-   - Product categories
-   
-   recipeController.js:
-   - Create, read, update, delete recipes
-   - Recipe listing
-   - Recipe search
-   
-   reviewController.js:
-   - Create product reviews
-   - Get reviews for a product
-   - Update and delete reviews
-   - Calculate product ratings
-   
-   shoppingListController.js:
-   - Create shopping lists
-   - Add/remove items from lists
-   - Get user's shopping lists
-   - Update shopping list items
-   
-   subscriptionController.js:
-   - Create subscriptions
-   - Manage subscription status
-   - Get user subscriptions
-   - Handle subscription renewals
-   
-   transactionController.js:
-   - Record transactions
-   - Get transaction history
-   - Process payments (structure ready for Stripe)
-   - Transaction reporting
-   
-   userController.js:
-   - Get user profile
-   - Update user profile
-   - Change password
-   - Delete user account
-
-middleware/ (Request Processing):
-
-   auth.js:
-   - protect: Verifies JWT token from request headers
-   - Adds user information to request object
-   - Blocks unauthorized requests (returns 401)
-   - admin: Checks if user has admin role
-   - Blocks non-admin users from admin routes
-   
-   errorHandler.js:
-   - Catches all errors in the application
-   - Formats error responses consistently
-   - Logs errors for debugging
-   - Returns appropriate HTTP status codes
-   
-   upload.js:
-   - Handles file uploads (images, documents)
-   - Ready for Cloudinary integration
-   - Validates file types and sizes
-   - Stores file information
-
-models/ (Database Schemas):
-
-   User.js:
-   - User schema with email, password, name
-   - Role field (user/admin)
-   - Timestamps (createdAt, updatedAt)
-   - Password hashing before save
-   
-   Product.js:
-   - Product schema with name, description, price
-   - Category, stock, images
-   - Rating and review count
-   - Timestamps
-   
-   ShoppingList.js:
-   - Shopping list schema
-   - References user who owns it
-   - Array of items with quantities
-   - Timestamps
-   
-   Recipe.js:
-   - Recipe schema with name, ingredients, instructions
-   - Cooking time, servings
-   - References to products
-   - Timestamps
-   
-   Subscription.js:
-   - Subscription schema
-   - References user
-   - Subscription type, status, dates
-   - Renewal information
-   
-   Transaction.js:
-   - Transaction schema
-   - References user
-   - Amount, payment method, status
-   - Transaction date and details
-   
-   Blog.js:
-   - Blog post schema
-   - Title, content, author
-   - Tags, categories
-   - Published status and date
-   
-   Review.js:
-   - Review schema
-   - References user and product
-   - Rating, comment
-   - Helpful votes
-   
-   GroupBuy.js:
-   - Group buy schema
-   - Product, organizer, participants
-   - Target quantity, current quantity
-   - Status and dates
-   
-   Notification.js:
-   - Notification schema
-   - References user
-   - Type, message, read status
-   - Timestamps
-
-routes/ (API Endpoints):
-
-   Each route file defines the URL paths and HTTP methods:
-   
-   adminRoutes.js:
-   - GET /api/admin/stats - Get dashboard statistics
-   - GET /api/admin/users - Get all users
-   - PUT /api/admin/users/:id - Update user
-   - DELETE /api/admin/users/:id - Delete user
-   
-   authRoutes.js:
-   - POST /api/auth/register - Register new user
-   - POST /api/auth/login - Login user
-   - POST /api/auth/logout - Logout user
-   
-   blogRoutes.js:
-   - GET /api/blogs - Get all blog posts
-   - GET /api/blogs/:id - Get single blog post
-   - POST /api/blogs - Create blog post (protected)
-   - PUT /api/blogs/:id - Update blog post (protected)
-   - DELETE /api/blogs/:id - Delete blog post (protected)
-   
-   groupBuyRoutes.js:
-   - GET /api/group-buys - Get all group buys
-   - GET /api/group-buys/:id - Get group buy details
-   - POST /api/group-buys - Create group buy (protected)
-   - POST /api/group-buys/:id/join - Join group buy (protected)
-   
-   notificationRoutes.js:
-   - GET /api/notifications - Get user notifications (protected)
-   - PUT /api/notifications/:id/read - Mark as read (protected)
-   - DELETE /api/notifications/:id - Delete notification (protected)
-   
-   productRoutes.js:
-   - GET /api/products - Get all products (with filters)
-   - GET /api/products/:id - Get single product
-   - POST /api/products - Create product (admin only)
-   - PUT /api/products/:id - Update product (admin only)
-   - DELETE /api/products/:id - Delete product (admin only)
-   
-   recipeRoutes.js:
-   - GET /api/recipes - Get all recipes
-   - GET /api/recipes/:id - Get single recipe
-   - POST /api/recipes - Create recipe (protected)
-   - PUT /api/recipes/:id - Update recipe (protected)
-   - DELETE /api/recipes/:id - Delete recipe (protected)
-   
-   reviewRoutes.js:
-   - GET /api/reviews/product/:productId - Get reviews for product
-   - POST /api/reviews - Create review (protected)
-   - PUT /api/reviews/:id - Update review (protected)
-   - DELETE /api/reviews/:id - Delete review (protected)
-   
-   shoppingListRoutes.js:
-   - GET /api/shopping-lists - Get user's shopping lists (protected)
-   - POST /api/shopping-lists - Create shopping list (protected)
-   - PUT /api/shopping-lists/:id - Update shopping list (protected)
-   - DELETE /api/shopping-lists/:id - Delete shopping list (protected)
-   
-   subscriptionRoutes.js:
-   - GET /api/subscriptions - Get user subscriptions (protected)
-   - POST /api/subscriptions - Create subscription (protected)
-   - PUT /api/subscriptions/:id - Update subscription (protected)
-   - DELETE /api/subscriptions/:id - Cancel subscription (protected)
-   
-   transactionRoutes.js:
-   - GET /api/transactions - Get user transactions (protected)
-   - POST /api/transactions - Create transaction (protected)
-   - GET /api/transactions/:id - Get transaction details (protected)
-   
-   userRoutes.js:
-   - GET /api/users/profile - Get user profile (protected)
-   - PUT /api/users/profile - Update profile (protected)
-   - PUT /api/users/password - Change password (protected)
-   - DELETE /api/users/profile - Delete account (protected)
-
-utils/seedProducts.js:
-   - Script to populate database with sample products
-   - Run with: npm run seed
-   - Clears existing products and inserts new ones
-   - Useful for testing and development
-
-server.js:
-   - Main entry point for the backend
-   - Initializes Express application
-   - Sets up middleware (CORS, JSON parsing, URL encoding)
-   - Connects to MongoDB database
-   - Registers all API routes
-   - Sets up error handling
-   - Starts HTTP server on port 5000 (or PORT from .env)
-   - This is the file you run with "npm start"
-
-package.json:
-   - Lists all backend dependencies
-   - Defines npm scripts (start, dev, seed)
-   - Project metadata and configuration
-
-FRONTEND FILES EXPLAINED:
-
-public/index.html:
-   - HTML template for React app
-   - Root div where React app mounts
-   - Meta tags and title
-
-src/index.js:
-   - Entry point for React application
-   - Renders App component to DOM
-   - Imports Bootstrap CSS
-   - Sets up React root
-
-src/App.js:
-   - Main React component
-   - Sets up React Router with all routes
-   - Wraps app in AuthProvider for global authentication state
-   - Defines route paths and components
-   - Handles navigation
-
-src/index.css:
-   - Global CSS styles
-   - Custom styles for the application
-   - Bootstrap overrides if needed
-
-src/context/AuthContext.js:
-   - Provides authentication state to entire app
-   - Stores user information and JWT token
-   - Provides login, logout, and register functions
-   - Makes auth state available to all components
-   - Handles token storage in localStorage
-
-src/components/ (Reusable Components):
-
-   auth/ProtectedRoute.js:
-   - Wrapper component for protected routes
-   - Checks if user is authenticated
-   - Redirects to login if not authenticated
-   - Allows access if user is logged in
-   
-   common/Navbar.js:
-   - Navigation bar component
-   - Shows different links for logged in/out users
-   - User menu with profile and logout
-   - Responsive design
-   
-   common/Footer.js:
-   - Footer component
-   - Site information and links
-   - Copyright information
-   
-   products/ProductCard.js:
-   - Displays product information in card format
-   - Shows product image, name, price
-   - Link to product detail page
-   
-   reviews/ReviewCard.js:
-   - Displays a single review
-   - Shows user, rating, comment
-   - Formatted nicely
-   
-   reviews/ReviewForm.js:
-   - Form to submit new review
-   - Rating selector
-   - Comment textarea
-   - Submit button
-   
-   reviews/ReviewsSection.js:
-   - Container for all reviews
-   - Lists multiple ReviewCard components
-   - Handles review display logic
-   
-   groupBuy/GroupBuyCard.js:
-   - Displays group buy information
-   - Shows product, participants, progress
-   - Join/leave buttons
-   
-   notifications/NotificationBell.js:
-   - Notification icon/bell component
-   - Shows notification count badge
-   - Click to view notifications
-
-src/pages/ (Page Components):
-
-   Home.js:
-   - Homepage component
-   - Welcome message
-   - Featured products or content
-   - Call-to-action buttons
-   
-   Login.js:
-   - Login page
-   - Email and password form
-   - Calls authService.login()
-   - Redirects to home after login
-   - Shows error messages
-   
-   Register.js:
-   - Registration page
-   - User registration form (name, email, password)
-   - Calls authService.register()
-   - Redirects to login after registration
-   - Form validation
-   
-   Products.js:
-   - Products listing page
-   - Fetches products from API
-   - Displays products in grid
-   - Filtering and search
-   - Uses ProductCard components
-   
-   ProductDetail.js:
-   - Single product detail page
-   - Shows full product information
-   - Add to cart/shopping list buttons
-   - Reviews section
-   - Related products
-   
-   ShoppingLists.js:
-   - User's shopping lists page
-   - Lists all shopping lists
-   - Create new shopping list
-   - Edit and delete lists
-   - Add items to lists
-   
-   Recipes.js:
-   - Recipes listing page
-   - Shows all available recipes
-   - Recipe search
-   - Link to recipe details
-   
-   Subscriptions.js:
-   - User subscriptions page
-   - Shows active subscriptions
-   - Manage subscriptions
-   - Subscribe to new products
-   
-   Financial.js:
-   - Financial dashboard
-   - Transaction history
-   - Spending charts (Chart.js)
-   - Budget tracking
-   
-   Blog.js:
-   - Blog listing page
-   - Shows all blog posts
-   - Blog post cards
-   - Link to full blog post
-   
-   GroupBuys.js:
-   - Group buys listing page
-   - Shows all active group buys
-   - Join group buys
-   - Create new group buy
-   
-   GroupBuyDetail.js:
-   - Single group buy detail page
-   - Shows group buy information
-   - List of participants
-   - Join/leave functionality
-   
-   Notifications.js:
-   - User notifications page
-   - Lists all notifications
-   - Mark as read
-   - Delete notifications
-   
-   Admin.js:
-   - Admin dashboard page
-   - Statistics and charts
-   - User management
-   - System analytics
-   - Admin-only features
-   
-   Profile.js:
-   - User profile page
-   - Display user information
-   - Edit profile form
-   - Change password
-   - Account settings
-
-src/services/ (API Services):
-
-   api.js:
-   - Creates axios instance with base URL from .env
-   - Automatically adds JWT token to all requests
-   - Handles 401 errors (redirects to login)
-   - Sets up request/response interceptors
-   
-   authService.js:
-   - register(email, password, name) - Register new user
-   - login(email, password) - Login user
-   - logout() - Logout user
-   - getCurrentUser() - Get current user info
-   
-   productService.js:
-   - getProducts() - Get all products
-   - getProduct(id) - Get single product
-   - createProduct(data) - Create product (admin)
-   - updateProduct(id, data) - Update product (admin)
-   - deleteProduct(id) - Delete product (admin)
-   
-   userService.js:
-   - getProfile() - Get user profile
-   - updateProfile(data) - Update profile
-   - changePassword(oldPassword, newPassword) - Change password
-   
-   shoppingListService.js:
-   - getShoppingLists() - Get user's shopping lists
-   - createShoppingList(data) - Create shopping list
-   - updateShoppingList(id, data) - Update shopping list
-   - deleteShoppingList(id) - Delete shopping list
-   
-   recipeService.js:
-   - getRecipes() - Get all recipes
-   - getRecipe(id) - Get single recipe
-   - createRecipe(data) - Create recipe
-   - updateRecipe(id, data) - Update recipe
-   - deleteRecipe(id) - Delete recipe
-   
-   subscriptionService.js:
-   - getSubscriptions() - Get user subscriptions
-   - createSubscription(data) - Create subscription
-   - updateSubscription(id, data) - Update subscription
-   - cancelSubscription(id) - Cancel subscription
-   
-   transactionService.js:
-   - getTransactions() - Get user transactions
-   - createTransaction(data) - Create transaction
-   - getTransaction(id) - Get transaction details
-   
-   blogService.js:
-   - getBlogs() - Get all blog posts
-   - getBlog(id) - Get single blog post
-   - createBlog(data) - Create blog post
-   - updateBlog(id, data) - Update blog post
-   - deleteBlog(id) - Delete blog post
-   
-   reviewService.js:
-   - getReviews(productId) - Get reviews for product
-   - createReview(data) - Create review
-   - updateReview(id, data) - Update review
-   - deleteReview(id) - Delete review
-   
-   groupBuyService.js:
-   - getGroupBuys() - Get all group buys
-   - getGroupBuy(id) - Get group buy details
-   - createGroupBuy(data) - Create group buy
-   - joinGroupBuy(id) - Join group buy
-   - leaveGroupBuy(id) - Leave group buy
-   
-   notificationService.js:
-   - getNotifications() - Get user notifications
-   - markAsRead(id) - Mark notification as read
-   - deleteNotification(id) - Delete notification
-   
-   adminService.js:
-   - getStats() - Get admin statistics
-   - getUsers() - Get all users
-   - updateUser(id, data) - Update user
-   - deleteUser(id) - Delete user
-
-package.json:
-   - Lists all frontend dependencies
-   - Defines npm scripts (start, build, test)
-   - React app configuration
+STOP SERVERS:
+- Press Ctrl + C in each terminal
 
 ================================================================================
-6. TROUBLESHOOTING
+6. SEED DATABASE (Optional)
 ================================================================================
 
-PROBLEM: "MongoDB connection error"
-SOLUTION:
-   - Check if MongoDB is running (local) or Atlas connection string is correct
-   - Verify .env file has correct MONGODB_URI
-   - For local: Ensure MongoDB service is started (net start MongoDB on Windows)
-   - For Atlas: Check IP whitelist and credentials
-   - Note: Backend will start even if MongoDB fails, but database features won't work
+To add sample products:
+- cd backend
+- npm run seed
 
-PROBLEM: "Port 5000 already in use"
-SOLUTION:
-   - Find the process using port 5000: netstat -ano | findstr ":5000"
-   - Kill the process: taskkill /PID <process_id> /F
-   - OR change PORT in backend/.env to different port (e.g., 5001)
-   - Update FRONTEND_URL in backend/.env if changed
-   - Update REACT_APP_API_URL in frontend/.env to match
+To add sample recipes:
+- cd backend
+- npm run seed:recipes
 
-PROBLEM: "Port 3000 already in use"
-SOLUTION:
-   - React will automatically ask to use different port (usually 3001)
-   - Accept the prompt, or manually kill the process using port 3000
-   - Find process: netstat -ano | findstr ":3000"
-   - Kill process: taskkill /PID <process_id> /F
+To add sample subscriptions (requires logged in user):
+- cd backend
+- npm run seed:subscriptions
 
-PROBLEM: "Cannot find module 'X'"
-SOLUTION:
-   - Run npm install in the folder where error occurs (backend or frontend)
-   - Check if package is in package.json
-   - Delete node_modules and package-lock.json, then npm install
-   - Try: npm cache clean --force, then npm install
-
-PROBLEM: "CORS error" in browser
-SOLUTION:
-   - Check FRONTEND_URL in backend/.env matches your frontend URL
-   - Ensure backend server is running
-   - Check browser console for specific CORS error
-   - Verify CORS is configured in backend/server.js
-
-PROBLEM: "401 Unauthorized" errors
-SOLUTION:
-   - User needs to login first
-   - Check if JWT_SECRET is set in backend/.env
-   - Verify token is being sent in request headers
-   - Check if token expired (default is 7 days)
-   - Try logging out and logging back in
-
-PROBLEM: Frontend shows blank page
-SOLUTION:
-   - Check browser console for errors (F12 → Console tab)
-   - Verify all imports are correct
-   - Check if backend is running and accessible
-   - Verify REACT_APP_API_URL in frontend/.env
-   - Try: npm start again in frontend folder
-
-PROBLEM: "npm install" takes too long or fails
-SOLUTION:
-   - Check internet connection
-   - Try: npm cache clean --force
-   - Try: npm install --legacy-peer-deps
-   - Check Node.js version: node --version (should be 16+)
-   - Try using different npm registry if in restricted network
-
-PROBLEM: "Cannot find path" when creating .env files
-SOLUTION:
-   - Ensure you're in the project root directory first
-   - Use full path: cd "D:\Downloads D\web project 1"
-   - Then: Copy-Item "backend\env.example.txt" "backend\.env"
-   - OR navigate to the folder first: cd backend, then Copy-Item "env.example.txt" ".env"
-
-PROBLEM: Backend starts but shows MongoDB connection error
-SOLUTION:
-   - This is NORMAL if MongoDB is not running
-   - Backend will still run and API will respond, but database features won't work
-   - Start MongoDB: net start MongoDB (Windows)
-   - OR use MongoDB Atlas and update MONGODB_URI in backend/.env
-   - Restart backend after fixing MongoDB connection
-   - Verify: Backend API at http://localhost:5000 should still respond
-
-PROBLEM: Frontend takes long time to start first time
-SOLUTION:
-   - This is NORMAL - React compilation takes 30-60 seconds first time
-   - Subsequent starts are faster (10-20 seconds)
-   - Wait for "Compiled successfully!" message
-   - Check port 3000 is listening: netstat -ano | findstr ":3000"
-   - Browser should auto-open, or manually go to http://localhost:3000
-   - If timeout when accessing, wait a bit longer - compilation may still be in progress
-
-PROBLEM: "Cannot find module" errors
-SOLUTION:
-   - Run: npm install in the folder where error occurs (backend or frontend)
-   - Delete node_modules and package-lock.json, then run npm install again
-   - Check Node.js version: node --version (should be 16 or higher)
-   - Try: npm cache clean --force, then npm install
-
-PROBLEM: VS Code terminal shows errors
-SOLUTION:
-   - Make sure you're in the correct directory (backend or frontend)
-   - Check that Node.js is installed: node --version
-   - Verify npm is working: npm --version
-   - Try closing and reopening VS Code
-   - Try opening a new terminal: Ctrl + Shift + `
+To add sample transactions (requires logged in user):
+- cd backend
+- npm run seed:transactions
 
 ================================================================================
-7. QUICK REFERENCE COMMANDS
+7. WHAT IS SMARTBASKET?
 ================================================================================
 
-Backend Commands:
-   cd backend
-   npm install              # Install dependencies (first time)
-   npm start               # Start server
-   npm run seed            # Seed database with products
+SmartBasket is a full-stack grocery shopping web application that helps users:
 
-Frontend Commands:
-   cd frontend
-   npm install             # Install dependencies (first time)
-   npm start               # Start development server
-   npm run build           # Build for production
+- Compare prices across multiple stores
+- Create AI-powered shopping lists
+- Get recipe recommendations based on dietary preferences
+- Manage product subscriptions for regular deliveries
+- Track financial spending and transactions
+- Participate in group buys for bulk discounts
+- Read and write blog posts about cooking and shopping
+- Review products and share experiences
 
-MongoDB Commands (Local):
-   net start MongoDB       # Start MongoDB service (Windows)
-   mongo                   # Open MongoDB shell (if installed)
+TECHNOLOGY STACK:
+- Backend: Node.js + Express + MongoDB
+- Frontend: React + Bootstrap
+- Authentication: JWT tokens
+- Database: MongoDB (Atlas or local)
 
-VS Code Shortcuts:
-   Ctrl + `                # Open terminal
-   Ctrl + Shift + `        # New terminal
-   Ctrl + C                # Stop running process
-   Ctrl + Shift + X        # Open Extensions
-
-PowerShell Commands (Windows):
-   # Navigate to project
-   cd "D:\Downloads D\web project 1"
-   
-   # Create .env files
-   Copy-Item "backend\env.example.txt" "backend\.env"
-   Copy-Item "frontend\env.example.txt" "frontend\.env"
-   
-   # Check if ports are in use
-   netstat -ano | findstr ":5000 :3000"
-   
-   # Check Node processes
-   Get-Process | Where-Object {$_.ProcessName -like "*node*"}
-   
-   # Kill process on port 5000
-   netstat -ano | findstr ":5000"
-   taskkill /PID <process_id> /F
+ARCHITECTURE:
+- RESTful API backend serving JSON data
+- React SPA (Single Page Application) frontend
+- JWT-based authentication
+- MongoDB for data storage
+- Responsive design with Bootstrap
 
 ================================================================================
-8. TESTING CHECKLIST
+8. WHAT HAS BEEN DONE
 ================================================================================
 
-Before considering setup complete, verify:
+✅ Complete backend API with all routes
+✅ User authentication (register, login, JWT)
+✅ Product management (CRUD operations)
+✅ Shopping lists with AI generation
+✅ Recipe system with recommendations
+✅ Subscription management
+✅ Financial tracking and transactions
+✅ Blog system
+✅ Reviews and ratings
+✅ Group buy feature
+✅ Admin dashboard
+✅ Responsive React frontend
+✅ All pages and components implemented
+✅ Database models and schemas
+✅ Seed scripts for sample data
 
-□ Node.js and npm are installed (node --version, npm --version)
-□ MongoDB is set up (local or Atlas)
-□ .env files created in both backend and frontend folders
-□ Backend dependencies installed (npm install in backend)
-□ Frontend dependencies installed (npm install in frontend)
-□ Backend server starts without errors (npm start in backend)
-□ Frontend server starts without errors (npm start in frontend)
-□ Can access http://localhost:5000 (backend API)
-□ Can access http://localhost:3000 (frontend app)
-□ Backend API returns JSON at http://localhost:5000
-□ Frontend shows homepage at http://localhost:3000
-□ Can register a new user
-□ Can login with registered user
-□ Can view products (if database seeded)
-□ Can view profile page
-□ Can navigate between pages
-□ No console errors in browser (F12 → Console)
-□ No errors in backend terminal
-□ MongoDB connection successful (check backend terminal)
+================================================================================
+9. WHAT IS LEFT TO DO
+================================================================================
+
+⚠️ SETUP REQUIRED (Must do before running):
+- Install Node.js and npm
+- Set up MongoDB (Atlas or local)
+- Create .env files with correct values
+- Install dependencies (npm install)
+
+OPTIONAL ENHANCEMENTS:
+- Cloudinary for image uploads
+- Stripe for payment processing
+- Email notifications
+- Advanced search functionality
+- Mobile app version
+
+================================================================================
+10. TROUBLESHOOTING
+================================================================================
+
+Port 5000 in use:
+- Change PORT in backend/.env to 5001
+- Update REACT_APP_API_URL in frontend/.env
+
+Port 3000 in use:
+- React will ask to use 3001 - accept it
+
+MongoDB connection error:
+- Check MONGODB_URI in backend/.env
+- Verify Atlas IP whitelist
+- Backend still runs without DB (but features won't work)
+
+npm install fails:
+- Check internet connection
+- Try: npm cache clean --force
+- Verify Node.js version: node --version (should be 16+)
+
+CORS errors:
+- Verify FRONTEND_URL in backend/.env matches frontend URL
+- Check REACT_APP_API_URL in frontend/.env
+
+401 Unauthorized:
+- User needs to login first
+- Check JWT_SECRET is set in backend/.env
+
+================================================================================
+11. QUICK COMMANDS
+================================================================================
+
+Backend:
+  cd backend
+  npm install      # First time only
+  npm start        # Start server
+  npm run seed     # Add sample products
+
+Frontend:
+  cd frontend
+  npm install      # First time only
+  npm start        # Start app
+
+MongoDB (Local):
+  net start MongoDB    # Start service (Windows)
 
 ================================================================================
 END OF GUIDE
 ================================================================================
-
-Note: Additional documentation files have been moved to the 'docs' folder
-for reference. This guide contains everything you need to get started.
-
-For issues not covered here, check the troubleshooting section above.
-
-Good luck with your project! 🚀

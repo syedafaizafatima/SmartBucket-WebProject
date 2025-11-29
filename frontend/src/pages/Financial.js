@@ -45,7 +45,18 @@ const Financial = () => {
       if (endDate) params.endDate = endDate;
       
       const response = await getTransactions(params);
-      setTransactions(response.data.data || []);
+      // Handle API response structure
+      let transactionsData = [];
+      if (response) {
+        if (response.success && response.data && Array.isArray(response.data)) {
+          transactionsData = response.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          transactionsData = response.data;
+        } else if (Array.isArray(response)) {
+          transactionsData = response;
+        }
+      }
+      setTransactions(transactionsData);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load transactions');
     } finally {
@@ -60,7 +71,16 @@ const Financial = () => {
       if (endDate) params.endDate = endDate;
       
       const response = await getCashflowStatement(params);
-      setStatement(response.data.data);
+      // Handle API response structure
+      if (response) {
+        if (response.success && response.data) {
+          setStatement(response.data);
+        } else if (response.data) {
+          setStatement(response.data);
+        } else {
+          setStatement(response);
+        }
+      }
     } catch (err) {
       console.error('Failed to load cashflow statement:', err);
     }
@@ -143,18 +163,18 @@ const Financial = () => {
   }
 
   return (
-    <Container className="my-5">
+    <Container className="my-5 fade-in">
       <Row className="mb-4">
         <Col>
-          <h2>Financial Dashboard</h2>
+          <h2 className="text-white">📊 Financial Dashboard</h2>
           <p className="text-muted">Track your income and expenses</p>
         </Col>
         <Col className="text-end">
           <Button variant="success" className="me-2" onClick={handleDownloadPDF}>
-            Download PDF
+            📄 Download PDF
           </Button>
           <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-            Add Transaction
+            ➕ Add Transaction
           </Button>
         </Col>
       </Row>
@@ -166,28 +186,32 @@ const Financial = () => {
       {statement && (
         <Row className="mb-4">
           <Col md={4}>
-            <Card className="text-center border-success">
+            <Card className="text-center border-success glow-effect">
               <Card.Body>
-                <Card.Title className="text-success">Total Credits</Card.Title>
+                <Card.Title className="text-success">
+                  <span className="floating-icon">💰</span> Total Credits
+                </Card.Title>
                 <h3 className="text-success">${statement.summary?.totalCredits?.toFixed(2) || '0.00'}</h3>
                 <small className="text-muted">Income</small>
               </Card.Body>
             </Card>
           </Col>
           <Col md={4}>
-            <Card className="text-center border-danger">
+            <Card className="text-center border-danger glow-effect" style={{ animationDelay: '1s' }}>
               <Card.Body>
-                <Card.Title className="text-danger">Total Debits</Card.Title>
+                <Card.Title className="text-danger">
+                  <span className="floating-icon" style={{ animationDelay: '2s' }}>💸</span> Total Debits
+                </Card.Title>
                 <h3 className="text-danger">${statement.summary?.totalDebits?.toFixed(2) || '0.00'}</h3>
                 <small className="text-muted">Expenses</small>
               </Card.Body>
             </Card>
           </Col>
           <Col md={4}>
-            <Card className={`text-center border-${statement.summary?.netCashflow >= 0 ? 'primary' : 'warning'}`}>
+            <Card className={`text-center border-${statement.summary?.netCashflow >= 0 ? 'primary' : 'warning'} glow-effect`} style={{ animationDelay: '3s' }}>
               <Card.Body>
                 <Card.Title className={`text-${statement.summary?.netCashflow >= 0 ? 'primary' : 'warning'}`}>
-                  Net Cashflow
+                  <span className="floating-icon">📈</span> Net Cashflow
                 </Card.Title>
                 <h3 className={`text-${statement.summary?.netCashflow >= 0 ? 'primary' : 'warning'}`}>
                   ${statement.summary?.netCashflow?.toFixed(2) || '0.00'}
@@ -259,7 +283,7 @@ const Financial = () => {
       {/* Transactions Table */}
       <Card>
         <Card.Header>
-          <h5 className="mb-0">Transaction History</h5>
+          <h5 className="mb-0 text-white">💳 Transaction History</h5>
         </Card.Header>
         <Card.Body>
           {transactions.length === 0 ? (

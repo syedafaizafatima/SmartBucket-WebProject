@@ -31,7 +31,18 @@ const ShoppingLists = () => {
     try {
       setLoading(true);
       const response = await getShoppingLists();
-      setLists(response.data.data || []);
+      // Handle API response structure
+      let listsData = [];
+      if (response) {
+        if (response.success && response.data && Array.isArray(response.data)) {
+          listsData = response.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          listsData = response.data;
+        } else if (Array.isArray(response)) {
+          listsData = response;
+        }
+      }
+      setLists(listsData);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load shopping lists');
     } finally {
@@ -42,7 +53,18 @@ const ShoppingLists = () => {
   const loadProducts = async () => {
     try {
       const response = await getProducts();
-      setProducts(response.data.data || []);
+      // Handle API response structure
+      let productsData = [];
+      if (response) {
+        if (response.success && response.data && Array.isArray(response.data)) {
+          productsData = response.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          productsData = response.data;
+        } else if (Array.isArray(response)) {
+          productsData = response;
+        }
+      }
+      setProducts(productsData);
     } catch (err) {
       console.error('Failed to load products:', err);
     }
@@ -194,17 +216,18 @@ const ShoppingLists = () => {
   }
 
   return (
-    <Container className="my-5">
+    <Container className="my-5 fade-in">
       <Row className="mb-4">
         <Col>
-          <h2>Shopping Lists</h2>
+          <h2>📝 Shopping Lists</h2>
+          <p className="text-muted">Manage your grocery shopping lists</p>
         </Col>
         <Col className="text-end">
           <Button variant="success" className="me-2" onClick={handleGenerateAI}>
-            Generate AI List
+            🤖 Generate AI List
           </Button>
           <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-            Create New List
+            ➕ Create New List
           </Button>
         </Col>
       </Row>
@@ -219,10 +242,12 @@ const ShoppingLists = () => {
       ) : (
         <Row>
           {lists.map((list) => (
-            <Col key={list._id} md={6} lg={4} className="mb-4">
-              <Card>
+            <Col key={list._id} md={6} lg={4} className="mb-4 slide-in">
+              <Card className="product-card">
                 <Card.Body>
-                  <Card.Title>{list.name}</Card.Title>
+                  <Card.Title>
+                    <span className="floating-icon">📋</span> {list.name}
+                  </Card.Title>
                   <Card.Text>
                     <Badge bg="secondary">{list.items.length} items</Badge>
                     <br />

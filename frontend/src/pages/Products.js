@@ -44,7 +44,23 @@ const Products = () => {
       };
 
       const response = await getProducts(filters);
-      let productsData = response.data || [];
+      // Handle API response structure - API returns { success: true, count: X, data: [...] }
+      // productService returns response.data which is the axios response.data
+      let productsData = [];
+      if (response) {
+        // API returns: { success: true, count: X, data: [...] }
+        if (response.success && response.data && Array.isArray(response.data)) {
+          productsData = response.data;
+        } 
+        // Fallback: if data is directly an array
+        else if (Array.isArray(response.data)) {
+          productsData = response.data;
+        } 
+        // Fallback: if response itself is an array
+        else if (Array.isArray(response)) {
+          productsData = response;
+        }
+      }
 
       // Client-side sorting
       if (sortBy === 'price-low') {

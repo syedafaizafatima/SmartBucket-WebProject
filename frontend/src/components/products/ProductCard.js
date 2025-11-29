@@ -11,32 +11,48 @@ const ProductCard = ({ product }) => {
   const hasDiscount = savings > 0;
 
   return (
-    <Card className="h-100 shadow-sm">
-      {product.images && product.images.length > 0 && (
-        <Card.Img
-          variant="top"
-          src={product.images[0]}
-          alt={product.name}
-          style={{ height: '200px', objectFit: 'cover' }}
-          onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
-          }}
-        />
-      )}
-      {(!product.images || product.images.length === 0) && (
+    <Card className="h-100 shadow-sm product-card" style={{ 
+      transition: 'all 0.3s ease',
+      overflow: 'hidden'
+    }}>
+      <div style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
+        {product.images && product.images.length > 0 && product.images[0] ? (
+          <Card.Img
+            variant="top"
+            src={product.images[0]}
+            alt={product.name}
+            style={{ 
+              height: '200px', 
+              width: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.3s ease'
+            }}
+            className="product-image"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+        ) : null}
         <div
+          className="image-placeholder"
           style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             height: '200px',
-            backgroundColor: '#f8f9fa',
-            display: 'flex',
+            background: `linear-gradient(135deg, var(--primary-color), var(--accent-purple))`,
+            display: product.images && product.images.length > 0 && product.images[0] ? 'none' : 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#6c757d'
+            color: '#ffffff',
+            fontSize: '3rem'
           }}
         >
-          No Image
+          🛒
         </div>
-      )}
+      </div>
       <Card.Body className="d-flex flex-column">
         <Card.Title className="h6">{product.name}</Card.Title>
         <Card.Text className="text-muted small mb-2">
@@ -74,7 +90,7 @@ const ProductCard = ({ product }) => {
             size="sm"
             className="w-100"
           >
-            View Details
+            👁️ View Details
           </Button>
         </div>
       </Card.Body>

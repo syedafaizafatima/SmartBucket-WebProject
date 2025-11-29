@@ -10,6 +10,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #001a33 !important; /* Dark Neon Blue Background */
+  color: #ffffff; /* White text for contrast */
+  min-height: 100vh;
 }
 
 code {
@@ -19,10 +22,248 @@ code {
 
 /* Custom styles */
 :root {
-  --primary-color: #28a745;
-  --secondary-color: #6c757d;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
+  /* Neon Color Scheme */
+  --primary-color: #0066ff; /* Neon Dark Blue */
+  --secondary-color: #00ccff; /* Light Neon Blue */
+  --accent-pink: #ff00ff; /* Neon Pink */
+  --accent-purple: #cc00ff; /* Neon Purple */
+  --bg-dark-neon-blue: #001a33; /* Dark Neon Blue Background */
+  --success-color: #00ff00;
+  --danger-color: #ff0066;
+  --warning-color: #ffcc00;
+  --info-color: #00ccff;
+  
+  /* Bootstrap overrides */
+  --bs-primary: #0066ff;
+  --bs-secondary: #00ccff;
+  --bs-primary-rgb: 0, 102, 255;
+  --bs-secondary-rgb: 0, 204, 255;
+}
+
+/* Bootstrap color overrides */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--accent-purple) !important;
+  border-color: var(--accent-purple) !important;
+  box-shadow: 0 0 15px rgba(204, 0, 255, 0.7) !important;
+  transform: scale(1.02);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  color: white !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+  background-color: #00b3e6 !important;
+  border-color: #00b3e6 !important;
+  box-shadow: 0 0 10px rgba(0, 204, 255, 0.5) !important;
+}
+
+.navbar {
+  background-color: var(--primary-color) !important;
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: white !important;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--accent-purple) !important;
+  text-shadow: 0 0 10px var(--accent-purple);
+}
+
+.navbar-nav .nav-link.active {
+  color: var(--accent-purple) !important;
+  font-weight: bold;
+  text-shadow: 0 0 10px var(--accent-purple);
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.bg-secondary {
+  background-color: var(--secondary-color) !important;
+}
+
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.text-secondary {
+  color: var(--secondary-color) !important;
+}
+
+.border-primary {
+  border-color: var(--primary-color) !important;
+}
+
+.border-secondary {
+  border-color: var(--secondary-color) !important;
+}
+
+/* Accent colors */
+.accent-pink {
+  color: var(--accent-pink) !important;
+}
+
+.accent-purple {
+  color: var(--accent-purple) !important;
+}
+
+.bg-accent-pink {
+  background-color: var(--accent-pink) !important;
+}
+
+.bg-accent-purple {
+  background-color: var(--accent-purple) !important;
+}
+
+/* Card hover effects with neon glow */
+.card {
+  border: 1px solid rgba(0, 102, 255, 0.2);
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.05) !important; /* Slightly transparent white for dark background */
+  color: #ffffff;
+}
+
+.card:hover {
+  border-color: var(--accent-purple) !important;
+  box-shadow: 0 0 20px rgba(204, 0, 255, 0.5) !important;
+  transform: translateY(-5px);
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.card-body {
+  color: #ffffff;
+}
+
+.card-title {
+  color: #ffffff;
+}
+
+.card-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Link colors */
+a {
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--accent-purple) !important;
+  text-shadow: 0 0 8px var(--accent-purple);
+}
+
+/* Badge colors */
+.badge.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.badge.bg-secondary {
+  background-color: var(--secondary-color) !important;
+}
+
+.badge:hover {
+  box-shadow: 0 0 10px var(--accent-purple);
+  transform: scale(1.05);
+}
+
+/* Form controls focus */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(0, 102, 255, 0.25);
+}
+
+/* Alert colors */
+.alert-primary {
+  background-color: rgba(0, 102, 255, 0.1);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.alert-secondary {
+  background-color: rgba(0, 204, 255, 0.1);
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+/* Dark background adjustments */
+.App {
+  background-color: var(--bg-dark-neon-blue);
+  min-height: 100vh;
+}
+
+main {
+  background-color: var(--bg-dark-neon-blue);
+}
+
+/* Text color adjustments for dark background */
+.text-muted {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff;
+}
+
+p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Form controls for dark background */
+.form-control,
+.form-select {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(0, 102, 255, 0.3);
+  color: #ffffff;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--accent-purple) !important;
+  color: #ffffff;
+  box-shadow: 0 0 0 0.25rem rgba(204, 0, 255, 0.4) !important;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-label {
+  color: #ffffff;
+}
+
+/* Container adjustments */
+.container {
+  background-color: transparent;
+}
+
+/* Navbar text adjustments */
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: white !important;
+}
+
+/* Footer adjustments */
+footer {
+  background-color: rgba(0, 26, 51, 0.8);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .navbar-brand {
@@ -36,5 +277,126 @@ code {
 
 .product-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(204, 0, 255, 0.4) !important;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--accent-purple);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--accent-purple), 0 0 30px var(--accent-purple);
+  }
+}
+
+/* Apply animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+.glow-effect {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-border {
+  animation: spin 1s linear infinite;
+}
+
+/* Floating animation for icons */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.floating-icon {
+  animation: float 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* Additional purple accent highlights */
+button:hover,
+.btn:hover {
+  box-shadow: 0 0 15px rgba(204, 0, 255, 0.6) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--accent-purple) !important;
+  outline-offset: 2px;
+}
+
+/* List items hover */
+.list-group-item:hover {
+  background-color: rgba(204, 0, 255, 0.1) !important;
+  border-left: 3px solid var(--accent-purple) !important;
+}
+
+/* Table row hover */
+.table tbody tr:hover {
+  background-color: rgba(204, 0, 255, 0.1) !important;
+}
+
+/* Modal close button */
+.btn-close:hover {
+  filter: drop-shadow(0 0 5px var(--accent-purple));
 }
 

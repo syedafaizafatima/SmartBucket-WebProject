@@ -1,15 +1,18 @@
 import api from './api';
 
-export const getRecipes = (params = {}) => {
-  return api.get('/recipes', { params });
+export const getRecipes = async (params = {}) => {
+  const response = await api.get('/recipes', { params });
+  return response.data;
 };
 
-export const getRecipe = (id) => {
-  return api.get(`/recipes/${id}`);
+export const getRecipe = async (id) => {
+  const response = await api.get(`/recipes/${id}`);
+  return response.data;
 };
 
-export const getRecommendedRecipes = () => {
-  return api.get('/recipes/recommended');
+export const getRecommendedRecipes = async () => {
+  const response = await api.get('/recipes/recommended');
+  return response.data;
 };
 
 export const createRecipe = (data) => {

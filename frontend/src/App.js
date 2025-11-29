@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
+import Sidebar from './components/common/Sidebar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -21,11 +22,14 @@ import Notifications from './pages/Notifications';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
+  const [showSidebar, setShowSidebar] = useState(false);
+
   return (
     <AuthProvider>
       <Router>
         <div className="App d-flex flex-column min-vh-100">
-          <Navbar />
+          <Navbar onSidebarToggle={() => setShowSidebar(true)} />
+          <Sidebar show={showSidebar} onHide={() => setShowSidebar(false)} />
           <main className="flex-grow-1">
             <Routes>
               <Route path="/" element={<Home />} />

@@ -40,7 +40,18 @@ const Subscriptions = () => {
     try {
       setLoading(true);
       const response = await getSubscriptions();
-      setSubscriptions(response.data.data || []);
+      // Handle API response structure
+      let subscriptionsData = [];
+      if (response) {
+        if (response.success && response.data && Array.isArray(response.data)) {
+          subscriptionsData = response.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          subscriptionsData = response.data;
+        } else if (Array.isArray(response)) {
+          subscriptionsData = response;
+        }
+      }
+      setSubscriptions(subscriptionsData);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load subscriptions');
     } finally {
@@ -51,7 +62,18 @@ const Subscriptions = () => {
   const loadProducts = async () => {
     try {
       const response = await getProducts();
-      setProducts(response.data.data || []);
+      // Handle API response structure
+      let productsData = [];
+      if (response) {
+        if (response.success && response.data && Array.isArray(response.data)) {
+          productsData = response.data;
+        } else if (response.data && Array.isArray(response.data)) {
+          productsData = response.data;
+        } else if (Array.isArray(response)) {
+          productsData = response;
+        }
+      }
+      setProducts(productsData);
     } catch (err) {
       console.error('Failed to load products:', err);
     }
@@ -230,15 +252,15 @@ const Subscriptions = () => {
   }
 
   return (
-    <Container className="my-5">
+    <Container className="my-5 fade-in">
       <Row className="mb-4">
         <Col>
-          <h2>Subscriptions</h2>
+          <h2 className="text-white">🔄 Subscriptions</h2>
           <p className="text-muted">Manage your recurring grocery deliveries</p>
         </Col>
         <Col className="text-end">
-          <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-            Create Subscription
+          <Button variant="primary" onClick={() => setShowCreateModal(true)} className="glow-effect">
+            ➕ Create Subscription
           </Button>
         </Col>
       </Row>
@@ -254,46 +276,46 @@ const Subscriptions = () => {
         <Row>
           {subscriptions.map((subscription) => (
             <Col key={subscription._id} md={6} lg={4} className="mb-4">
-              <Card>
+              <Card className="glow-effect" style={{ animationDelay: `${subscription._id % 3 * 0.2}s` }}>
                 <Card.Body>
                   <div className="d-flex justify-content-between align-items-start mb-3">
-                    <Badge bg={getStatusBadge(subscription.status)}>
+                    <Badge bg={getStatusBadge(subscription.status)} className="p-2">
                       {subscription.status.toUpperCase()}
                     </Badge>
-                    <Badge bg="info">{getFrequencyLabel(subscription.frequency)}</Badge>
+                    <Badge bg="info" className="p-2">{getFrequencyLabel(subscription.frequency)}</Badge>
                   </div>
-                  <Card.Title className="mb-3">
-                    {subscription.items.length} items
+                  <Card.Title className="mb-3 text-white">
+                    <span className="floating-icon" style={{ animationDelay: `${subscription._id % 3 * 0.5}s` }}>📦</span> {subscription.items.length} items
                   </Card.Title>
                   <Card.Text>
                     <small className="text-muted">
-                      <strong>Next Delivery:</strong><br />
+                      <strong>📅 Next Delivery:</strong><br />
                       {subscription.nextDelivery ? new Date(subscription.nextDelivery).toLocaleDateString() : 'N/A'}
                     </small>
                   </Card.Text>
                   <Card.Text>
                     <small className="text-muted">
-                      <strong>Total:</strong> ${calculateSubscriptionTotal(subscription.items).toFixed(2)}
+                      <strong>💰 Total:</strong> ${calculateSubscriptionTotal(subscription.items).toFixed(2)}
                     </small>
                   </Card.Text>
-                  <div className="d-grid gap-2">
-                    <Button variant="outline-primary" size="sm" onClick={() => openViewModal(subscription)}>
-                      View Details
+                  <div className="d-grid gap-2 mt-3">
+                    <Button variant="outline-primary" size="sm" onClick={() => openViewModal(subscription)} className="glow-effect">
+                      👁️ View Details
                     </Button>
                     {subscription.status === 'active' ? (
                       <Button variant="outline-warning" size="sm" onClick={() => handlePauseSubscription(subscription._id)}>
-                        Pause
+                        ⏸️ Pause
                       </Button>
                     ) : subscription.status === 'paused' ? (
                       <Button variant="outline-success" size="sm" onClick={() => handleResumeSubscription(subscription._id)}>
-                        Resume
+                        ▶️ Resume
                       </Button>
                     ) : null}
                     <Button variant="outline-secondary" size="sm" onClick={() => openEditModal(subscription)}>
-                      Edit
+                      ✏️ Edit
                     </Button>
                     <Button variant="outline-danger" size="sm" onClick={() => handleDeleteSubscription(subscription._id)}>
-                      Delete
+                      🗑️ Delete
                     </Button>
                   </div>
                 </Card.Body>

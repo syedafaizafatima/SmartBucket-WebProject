@@ -1,7 +1,8 @@
 import api from './api';
 
-export const getTransactions = (params = {}) => {
-  return api.get('/transactions', { params });
+export const getTransactions = async (params = {}) => {
+  const response = await api.get('/transactions', { params });
+  return response.data;
 };
 
 export const getTransaction = (id) => {
@@ -12,8 +13,9 @@ export const createTransaction = (data) => {
   return api.post('/transactions', data);
 };
 
-export const getCashflowStatement = (params = {}) => {
-  return api.get('/transactions/statement', { params });
+export const getCashflowStatement = async (params = {}) => {
+  const response = await api.get('/transactions/statement', { params });
+  return response.data;
 };
 
 export const downloadCashflowPDF = (params = {}) => {
