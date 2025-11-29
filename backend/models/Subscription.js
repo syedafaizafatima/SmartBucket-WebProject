@@ -39,6 +39,15 @@ const SubscriptionSchema = new mongoose.Schema({
     min: 0,
     max: 100
   },
+  deliveryAddress: {
+    type: String,
+    default: ''
+  },
+  paymentMethod: {
+    type: String,
+    enum: ['credit-card', 'debit-card', 'paypal', 'other'],
+    default: 'credit-card'
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -22,7 +22,7 @@ const TransactionSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['subscription', 'order', 'refund', 'payment', 'other'],
+    enum: ['groceries', 'subscription', 'refund', 'purchase', 'other'],
     default: 'other'
   },
   relatedTo: {

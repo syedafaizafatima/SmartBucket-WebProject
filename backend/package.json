@@ -7,6 +7,10 @@
     "start": "node server.js",
     "dev": "node server.js",
     "seed": "node utils/seedProducts.js",
+    "seed:recipes": "node utils/seedRecipes.js",
+    "seed:subscriptions": "node utils/seedSubscriptions.js",
+    "seed:transactions": "node utils/seedTransactions.js",
+    "seed:all": "node utils/seedProducts.js && node utils/seedRecipes.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
