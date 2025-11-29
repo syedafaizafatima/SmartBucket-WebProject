@@ -10,7 +10,7 @@ const {
   deleteAllNotifications,
   getUnreadCount
 } = require('../controllers/notificationController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, admin } = require('../middleware/auth');
 
 // All routes are protected
 router.use(protect);
@@ -25,7 +25,7 @@ router.delete('/:id', deleteNotification);
 router.delete('/', deleteAllNotifications);
 
 // Admin routes
-router.post('/', authorize('admin'), createNotification);
+router.post('/', admin, createNotification);
 
 module.exports = router;
 
