@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Modal, Form, ListGroup, Badge, Alert, Spinner } from 'react-bootstrap';
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Modal,
+  Form,
+  ListGroup,
+  Badge,
+  Alert,
+  Spinner
+} from 'react-bootstrap';
 import {
   getSubscriptions,
   createSubscription,
@@ -16,13 +28,13 @@ const Subscriptions = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  
+
   // Modal states
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [currentSubscription, setCurrentSubscription] = useState(null);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     items: [],
@@ -40,10 +52,10 @@ const Subscriptions = () => {
     try {
       setLoading(true);
       const response = await getSubscriptions();
-      // Handle API response structure
+
       let subscriptionsData = [];
       if (response) {
-        if (response.success && response.data && Array.isArray(response.data)) {
+        if (response.success && Array.isArray(response.data)) {
           subscriptionsData = response.data;
         } else if (response.data && Array.isArray(response.data)) {
           subscriptionsData = response.data;
@@ -62,10 +74,9 @@ const Subscriptions = () => {
   const loadProducts = async () => {
     try {
       const response = await getProducts();
-      // Handle API response structure
       let productsData = [];
       if (response) {
-        if (response.success && response.data && Array.isArray(response.data)) {
+        if (response.success && Array.isArray(response.data)) {
           productsData = response.data;
         } else if (response.data && Array.isArray(response.data)) {
           productsData = response.data;
@@ -88,7 +99,12 @@ const Subscriptions = () => {
       await createSubscription(formData);
       setSuccess('Subscription created successfully!');
       setShowCreateModal(false);
-      setFormData({ items: [], frequency: 'weekly', deliveryAddress: '', paymentMethod: 'credit-card' });
+      setFormData({
+        items: [],
+        frequency: 'weekly',
+        deliveryAddress: '',
+        paymentMethod: 'credit-card'
+      });
       loadSubscriptions();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create subscription');
@@ -104,7 +120,12 @@ const Subscriptions = () => {
       await updateSubscription(currentSubscription._id, formData);
       setSuccess('Subscription updated successfully!');
       setShowEditModal(false);
-      setFormData({ items: [], frequency: 'weekly', deliveryAddress: '', paymentMethod: 'credit-card' });
+      setFormData({
+        items: [],
+        frequency: 'weekly',
+        deliveryAddress: '',
+        paymentMethod: 'credit-card'
+      });
       setCurrentSubscription(null);
       loadSubscriptions();
     } catch (err) {
@@ -145,9 +166,18 @@ const Subscriptions = () => {
   };
 
   const openEditModal = (subscription) => {
+    // Normalize items so productId is always an ID string in the form state
+    const normalizedItems = (subscription.items || []).map((item) => ({
+      ...item,
+      productId:
+        item?.productId && typeof item.productId === 'object'
+          ? item.productId._id
+          : item.productId
+    }));
+
     setCurrentSubscription(subscription);
     setFormData({
-      items: subscription.items,
+      items: normalizedItems,
       frequency: subscription.frequency,
       deliveryAddress: subscription.deliveryAddress,
       paymentMethod: subscription.paymentMethod
@@ -161,12 +191,14 @@ const Subscriptions = () => {
   };
 
   const addItemToSubscription = (productId) => {
-    const existingItem = formData.items.find(item => item.productId === productId);
-    
+    if (!productId) return;
+
+    const existingItem = formData.items.find((item) => item.productId === productId);
+
     if (existingItem) {
       setFormData({
         ...formData,
-        items: formData.items.map(item =>
+        items: formData.items.map((item) =>
           item.productId === productId
             ? { ...item, quantity: item.quantity + 1 }
             : item
@@ -183,41 +215,69 @@ const Subscriptions = () => {
   const removeItemFromSubscription = (productId) => {
     setFormData({
       ...formData,
-      items: formData.items.filter(item => item.productId !== productId)
+      items: formData.items.filter((item) => item.productId !== productId)
     });
   };
 
   const updateItemQuantity = (productId, quantity) => {
-    if (quantity <= 0) {
+    const parsedQty = parseInt(quantity, 10);
+
+    if (!parsedQty || parsedQty <= 0) {
       removeItemFromSubscription(productId);
       return;
     }
 
     setFormData({
       ...formData,
-      items: formData.items.map(item =>
+      items: formData.items.map((item) =>
         item.productId === productId
-          ? { ...item, quantity: parseInt(quantity) }
+          ? { ...item, quantity: parsedQty }
           : item
       )
     });
   };
 
   const getProductName = (productId) => {
-    const product = products.find(p => p._id === productId);
+    if (!productId) return 'Unknown Product';
+
+    const id =
+      typeof productId === 'object' && productId !== null
+        ? productId._id
+        : productId;
+
+    const product = products.find((p) => p._id === id);
     return product ? product.name : 'Unknown Product';
   };
 
-  const calculateSubscriptionTotal = (items) => {
+  const calculateSubscriptionTotal = (items = []) => {
+    if (!Array.isArray(items) || products.length === 0) return 0;
+
     return items.reduce((total, item) => {
-      const product = products.find(p => p._id === (item.productId._id || item.productId));
-      if (product) {
-        const price = product.storePrices && product.storePrices.length > 0
-          ? Math.min(...product.storePrices.filter(sp => sp.availability).map(sp => sp.price))
-          : product.basePrice;
-        return total + (price * item.quantity);
+      if (!item || !item.productId) return total;
+
+      const productId =
+        typeof item.productId === 'object'
+          ? item.productId._id
+          : item.productId;
+
+      if (!productId) return total;
+
+      const product = products.find((p) => p._id === productId);
+      if (!product) return total;
+
+      let price = product.basePrice || 0;
+
+      if (Array.isArray(product.storePrices) && product.storePrices.length > 0) {
+        const availablePrices = product.storePrices
+          .filter((sp) => sp && sp.availability)
+          .map((sp) => sp.price);
+
+        if (availablePrices.length > 0) {
+          price = Math.min(...availablePrices);
+        }
       }
-      return total;
+
+      return total + price * (item.quantity || 1);
     }, 0);
   };
 
@@ -259,62 +319,137 @@ const Subscriptions = () => {
           <p className="text-muted">Manage your recurring grocery deliveries</p>
         </Col>
         <Col className="text-end">
-          <Button variant="primary" onClick={() => setShowCreateModal(true)} className="glow-effect">
+          <Button
+            variant="primary"
+            onClick={() => setShowCreateModal(true)}
+            className="glow-effect"
+          >
             ➕ Create Subscription
           </Button>
         </Col>
       </Row>
 
-      {error && <Alert variant="danger" dismissible onClose={() => setError('')}>{error}</Alert>}
-      {success && <Alert variant="success" dismissible onClose={() => setSuccess('')}>{success}</Alert>}
+      {error && (
+        <Alert
+          variant="danger"
+          dismissible
+          onClose={() => setError('')}
+        >
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert
+          variant="success"
+          dismissible
+          onClose={() => setSuccess('')}
+        >
+          {success}
+        </Alert>
+      )}
 
       {subscriptions.length === 0 ? (
         <Alert variant="info">
-          No subscriptions yet. Create your first subscription for automatic grocery deliveries!
+          No subscriptions yet. Create your first subscription for automatic
+          grocery deliveries!
         </Alert>
       ) : (
         <Row>
           {subscriptions.map((subscription) => (
             <Col key={subscription._id} md={6} lg={4} className="mb-4">
-              <Card className="glow-effect" style={{ animationDelay: `${subscription._id % 3 * 0.2}s` }}>
+              <Card
+                className="glow-effect"
+                style={{
+                  animationDelay: `${(subscription._id || '').length % 3 * 0.2}s`
+                }}
+              >
                 <Card.Body>
                   <div className="d-flex justify-content-between align-items-start mb-3">
-                    <Badge bg={getStatusBadge(subscription.status)} className="p-2">
-                      {subscription.status.toUpperCase()}
+                    <Badge
+                      bg={getStatusBadge(subscription.status)}
+                      className="p-2"
+                    >
+                      {subscription.status?.toUpperCase() || 'UNKNOWN'}
                     </Badge>
-                    <Badge bg="info" className="p-2">{getFrequencyLabel(subscription.frequency)}</Badge>
+                    <Badge bg="info" className="p-2">
+                      {getFrequencyLabel(subscription.frequency)}
+                    </Badge>
                   </div>
                   <Card.Title className="mb-3 text-white">
-                    <span className="floating-icon" style={{ animationDelay: `${subscription._id % 3 * 0.5}s` }}>📦</span> {subscription.items.length} items
+                    <span
+                      className="floating-icon"
+                      style={{
+                        animationDelay: `${(subscription._id || '').length % 3 * 0.5}s`
+                      }}
+                    >
+                      📦
+                    </span>{' '}
+                    {subscription.items?.length || 0} items
                   </Card.Title>
                   <Card.Text>
                     <small className="text-muted">
-                      <strong>📅 Next Delivery:</strong><br />
-                      {subscription.nextDelivery ? new Date(subscription.nextDelivery).toLocaleDateString() : 'N/A'}
+                      <strong>📅 Next Delivery:</strong>
+                      <br />
+                      {subscription.nextDelivery
+                        ? new Date(
+                            subscription.nextDelivery
+                          ).toLocaleDateString()
+                        : 'N/A'}
                     </small>
                   </Card.Text>
                   <Card.Text>
                     <small className="text-muted">
-                      <strong>💰 Total:</strong> ${calculateSubscriptionTotal(subscription.items).toFixed(2)}
+                      <strong>💰 Total:</strong>{' '}
+                      $
+                      {calculateSubscriptionTotal(
+                        subscription.items || []
+                      ).toFixed(2)}
                     </small>
                   </Card.Text>
                   <div className="d-grid gap-2 mt-3">
-                    <Button variant="outline-primary" size="sm" onClick={() => openViewModal(subscription)} className="glow-effect">
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => openViewModal(subscription)}
+                      className="glow-effect"
+                    >
                       👁️ View Details
                     </Button>
                     {subscription.status === 'active' ? (
-                      <Button variant="outline-warning" size="sm" onClick={() => handlePauseSubscription(subscription._id)}>
+                      <Button
+                        variant="outline-warning"
+                        size="sm"
+                        onClick={() =>
+                          handlePauseSubscription(subscription._id)
+                        }
+                      >
                         ⏸️ Pause
                       </Button>
                     ) : subscription.status === 'paused' ? (
-                      <Button variant="outline-success" size="sm" onClick={() => handleResumeSubscription(subscription._id)}>
+                      <Button
+                        variant="outline-success"
+                        size="sm"
+                        onClick={() =>
+                          handleResumeSubscription(subscription._id)
+                        }
+                      >
                         ▶️ Resume
                       </Button>
                     ) : null}
-                    <Button variant="outline-secondary" size="sm" onClick={() => openEditModal(subscription)}>
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={() => openEditModal(subscription)}
+                    >
                       ✏️ Edit
                     </Button>
-                    <Button variant="outline-danger" size="sm" onClick={() => handleDeleteSubscription(subscription._id)}>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() =>
+                        handleDeleteSubscription(subscription._id)
+                      }
+                    >
                       🗑️ Delete
                     </Button>
                   </div>
@@ -326,7 +461,11 @@ const Subscriptions = () => {
       )}
 
       {/* Create Modal */}
-      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)} size="lg">
+      <Modal
+        show={showCreateModal}
+        onHide={() => setShowCreateModal(false)}
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Create Subscription</Modal.Title>
         </Modal.Header>
@@ -336,7 +475,9 @@ const Subscriptions = () => {
               <Form.Label>Delivery Frequency</Form.Label>
               <Form.Select
                 value={formData.frequency}
-                onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, frequency: e.target.value })
+                }
                 required
               >
                 <option value="weekly">Weekly</option>
@@ -351,7 +492,12 @@ const Subscriptions = () => {
                 as="textarea"
                 rows={2}
                 value={formData.deliveryAddress}
-                onChange={(e) => setFormData({ ...formData, deliveryAddress: e.target.value })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    deliveryAddress: e.target.value
+                  })
+                }
                 required
                 placeholder="Enter your delivery address"
               />
@@ -361,7 +507,12 @@ const Subscriptions = () => {
               <Form.Label>Payment Method</Form.Label>
               <Form.Select
                 value={formData.paymentMethod}
-                onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    paymentMethod: e.target.value
+                  })
+                }
                 required
               >
                 <option value="credit-card">Credit Card</option>
@@ -372,7 +523,11 @@ const Subscriptions = () => {
 
             <Form.Group className="mb-3">
               <Form.Label>Add Products</Form.Label>
-              <Form.Select onChange={(e) => e.target.value && addItemToSubscription(e.target.value)}>
+              <Form.Select
+                onChange={(e) =>
+                  e.target.value && addItemToSubscription(e.target.value)
+                }
+              >
                 <option value="">Select a product to add...</option>
                 {products.map((product) => (
                   <option key={product._id} value={product._id}>
@@ -387,20 +542,27 @@ const Subscriptions = () => {
                 <h6>Selected Items:</h6>
                 <ListGroup>
                   {formData.items.map((item) => (
-                    <ListGroup.Item key={item.productId} className="d-flex justify-content-between align-items-center">
+                    <ListGroup.Item
+                      key={item.productId}
+                      className="d-flex justify-content-between align-items-center"
+                    >
                       <span>{getProductName(item.productId)}</span>
                       <div className="d-flex align-items-center gap-2">
                         <Form.Control
                           type="number"
                           value={item.quantity}
-                          onChange={(e) => updateItemQuantity(item.productId, e.target.value)}
+                          onChange={(e) =>
+                            updateItemQuantity(item.productId, e.target.value)
+                          }
                           style={{ width: '80px' }}
                           min="1"
                         />
                         <Button
                           variant="outline-danger"
                           size="sm"
-                          onClick={() => removeItemFromSubscription(item.productId)}
+                          onClick={() =>
+                            removeItemFromSubscription(item.productId)
+                          }
                         >
                           Remove
                         </Button>
@@ -409,13 +571,22 @@ const Subscriptions = () => {
                   ))}
                 </ListGroup>
                 <div className="mt-2">
-                  <strong>Total per delivery: ${calculateSubscriptionTotal(formData.items).toFixed(2)}</strong>
+                  <strong>
+                    Total per delivery: $
+                    {calculateSubscriptionTotal(
+                      formData.items
+                    ).toFixed(2)}
+                  </strong>
                 </div>
               </div>
             )}
 
             <div className="d-grid gap-2">
-              <Button variant="primary" type="submit" disabled={formData.items.length === 0}>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={formData.items.length === 0}
+              >
                 Create Subscription
               </Button>
             </div>
@@ -424,7 +595,11 @@ const Subscriptions = () => {
       </Modal>
 
       {/* Edit Modal */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg">
+      <Modal
+        show={showEditModal}
+        onHide={() => setShowEditModal(false)}
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Edit Subscription</Modal.Title>
         </Modal.Header>
@@ -434,7 +609,9 @@ const Subscriptions = () => {
               <Form.Label>Delivery Frequency</Form.Label>
               <Form.Select
                 value={formData.frequency}
-                onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, frequency: e.target.value })
+                }
                 required
               >
                 <option value="weekly">Weekly</option>
@@ -449,7 +626,12 @@ const Subscriptions = () => {
                 as="textarea"
                 rows={2}
                 value={formData.deliveryAddress}
-                onChange={(e) => setFormData({ ...formData, deliveryAddress: e.target.value })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    deliveryAddress: e.target.value
+                  })
+                }
                 required
               />
             </Form.Group>
@@ -458,7 +640,12 @@ const Subscriptions = () => {
               <Form.Label>Payment Method</Form.Label>
               <Form.Select
                 value={formData.paymentMethod}
-                onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    paymentMethod: e.target.value
+                  })
+                }
                 required
               >
                 <option value="credit-card">Credit Card</option>
@@ -469,7 +656,11 @@ const Subscriptions = () => {
 
             <Form.Group className="mb-3">
               <Form.Label>Add Products</Form.Label>
-              <Form.Select onChange={(e) => e.target.value && addItemToSubscription(e.target.value)}>
+              <Form.Select
+                onChange={(e) =>
+                  e.target.value && addItemToSubscription(e.target.value)
+                }
+              >
                 <option value="">Select a product to add...</option>
                 {products.map((product) => (
                   <option key={product._id} value={product._id}>
@@ -484,22 +675,30 @@ const Subscriptions = () => {
                 <h6>Items in Subscription:</h6>
                 <ListGroup>
                   {formData.items.map((item) => {
-                    const itemId = item.productId._id || item.productId;
+                    if (!item) return null;
+                    const itemId = item.productId;
                     return (
-                      <ListGroup.Item key={itemId} className="d-flex justify-content-between align-items-center">
+                      <ListGroup.Item
+                        key={itemId}
+                        className="d-flex justify-content-between align-items-center"
+                      >
                         <span>{getProductName(itemId)}</span>
                         <div className="d-flex align-items-center gap-2">
                           <Form.Control
                             type="number"
                             value={item.quantity}
-                            onChange={(e) => updateItemQuantity(itemId, e.target.value)}
+                            onChange={(e) =>
+                              updateItemQuantity(itemId, e.target.value)
+                            }
                             style={{ width: '80px' }}
                             min="1"
                           />
                           <Button
                             variant="outline-danger"
                             size="sm"
-                            onClick={() => removeItemFromSubscription(itemId)}
+                            onClick={() =>
+                              removeItemFromSubscription(itemId)
+                            }
                           >
                             Remove
                           </Button>
@@ -521,7 +720,11 @@ const Subscriptions = () => {
       </Modal>
 
       {/* View Modal */}
-      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size="lg">
+      <Modal
+        show={showViewModal}
+        onHide={() => setShowViewModal(false)}
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Subscription Details</Modal.Title>
         </Modal.Header>
@@ -532,7 +735,7 @@ const Subscriptions = () => {
                 <Col>
                   <strong>Status:</strong>{' '}
                   <Badge bg={getStatusBadge(currentSubscription.status)}>
-                    {currentSubscription.status.toUpperCase()}
+                    {currentSubscription.status?.toUpperCase() || 'UNKNOWN'}
                   </Badge>
                 </Col>
                 <Col>
@@ -543,7 +746,11 @@ const Subscriptions = () => {
 
               <div className="mb-3">
                 <strong>Next Delivery:</strong>{' '}
-                {currentSubscription.nextDelivery ? new Date(currentSubscription.nextDelivery).toLocaleDateString() : 'N/A'}
+                {currentSubscription.nextDelivery
+                  ? new Date(
+                      currentSubscription.nextDelivery
+                    ).toLocaleDateString()
+                  : 'N/A'}
               </div>
 
               <div className="mb-3">
@@ -552,37 +759,74 @@ const Subscriptions = () => {
               </div>
 
               <div className="mb-3">
-                <strong>Payment Method:</strong> {currentSubscription.paymentMethod}
+                <strong>Payment Method:</strong>{' '}
+                {currentSubscription.paymentMethod}
               </div>
 
               <h6 className="mt-4">Items:</h6>
-              {currentSubscription.items.length === 0 ? (
+              {!currentSubscription.items ||
+              currentSubscription.items.length === 0 ? (
                 <Alert variant="info">No items in this subscription</Alert>
               ) : (
                 <>
                   <ListGroup className="mb-3">
-                    {currentSubscription.items.map((item) => {
-                      const product = products.find(p => p._id === (item.productId._id || item.productId));
-                      const price = product
-                        ? (product.storePrices && product.storePrices.length > 0
-                          ? Math.min(...product.storePrices.filter(sp => sp.availability).map(sp => sp.price))
-                          : product.basePrice)
-                        : 0;
+                    {currentSubscription.items.map((item, idx) => {
+                      if (!item) return null;
+
+                      const productId =
+                        item.productId && typeof item.productId === 'object'
+                          ? item.productId._id
+                          : item.productId;
+
+                      const product = products.find(
+                        (p) => p._id === productId
+                      );
+
+                      let price = product?.basePrice || 0;
+                      if (
+                        product &&
+                        Array.isArray(product.storePrices) &&
+                        product.storePrices.length > 0
+                      ) {
+                        const availablePrices = product.storePrices
+                          .filter((sp) => sp && sp.availability)
+                          .map((sp) => sp.price);
+                        if (availablePrices.length > 0) {
+                          price = Math.min(...availablePrices);
+                        }
+                      }
+
+                      const lineTotal = price * (item.quantity || 1);
 
                       return (
-                        <ListGroup.Item key={item._id} className="d-flex justify-content-between align-items-center">
+                        <ListGroup.Item
+                          key={productId || item._id || idx}
+                          className="d-flex justify-content-between align-items-center"
+                        >
                           <div>
-                            <strong>{item.productId?.name || getProductName(item.productId)}</strong>
+                            <strong>
+                              {product?.name ||
+                                getProductName(item.productId)}
+                            </strong>
                             <br />
-                            <small className="text-muted">Quantity: {item.quantity}</small>
+                            <small className="text-muted">
+                              Quantity: {item.quantity}
+                            </small>
                           </div>
-                          <Badge bg="primary">${(price * item.quantity).toFixed(2)}</Badge>
+                          <Badge bg="primary">
+                            ${lineTotal.toFixed(2)}
+                          </Badge>
                         </ListGroup.Item>
                       );
                     })}
                   </ListGroup>
                   <div className="text-end">
-                    <strong>Total per delivery: ${calculateSubscriptionTotal(currentSubscription.items).toFixed(2)}</strong>
+                    <strong>
+                      Total per delivery: $
+                      {calculateSubscriptionTotal(
+                        currentSubscription.items
+                      ).toFixed(2)}
+                    </strong>
                   </div>
                 </>
               )}
@@ -590,7 +834,10 @@ const Subscriptions = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowViewModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowViewModal(false)}
+          >
             Close
           </Button>
         </Modal.Footer>
@@ -600,4 +847,3 @@ const Subscriptions = () => {
 };
 
 export default Subscriptions;
-

@@ -20,6 +20,7 @@ import GroupBuys from './pages/GroupBuys';
 import GroupBuyDetail from './pages/GroupBuyDetail';
 import Notifications from './pages/Notifications';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import './index.css';
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);

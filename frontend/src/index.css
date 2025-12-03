@@ -10,7 +10,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #001a33 !important; /* Dark Neon Blue Background */
+  background-color: #eef7ff !important; /* Dark Neon Blue Background */
   color: #ffffff; /* White text for contrast */
   min-height: 100vh;
 }
