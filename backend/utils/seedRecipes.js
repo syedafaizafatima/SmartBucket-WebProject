@@ -15,12 +15,21 @@ const seedRecipes = async () => {
 
     console.log('Connected to MongoDB');
 
-    // Get products to use as ingredients
-    const products = await Product.find().limit(20);
-    if (products.length === 0) {
+    // Load all products (we'll reference them by name)
+    const products = await Product.find();
+    if (!products.length) {
       console.log('No products found. Please seed products first.');
       process.exit(1);
     }
+
+    const findProductId = (name) => {
+      const p = products.find((prod) => prod.name === name);
+      if (!p) {
+        console.warn(`⚠️ Product not found for recipe ingredient: "${name}"`);
+        return null;
+      }
+      return p._id;
+    };
 
     // Clear existing recipes
     await Recipe.deleteMany({});
@@ -28,332 +37,323 @@ const seedRecipes = async () => {
 
     const sampleRecipes = [
       {
-        name: 'Fresh Fruit Smoothie Bowl',
+        name: 'Banana Berry Smoothie Bowl',
         description:
-          '• Healthy, refreshing smoothie bowl for busy mornings\n' +
-          '• Uses simple fruit, greens, and milk you likely already have\n' +
-          '• Naturally sweet, no added sugar needed\n' +
-          '• Ready in about 10 minutes',
+          '• Creamy fruit-based breakfast bowl\n' +
+          '• Uses bananas, berries, and yogurt or milk\n' +
+          '• High in fiber and natural sweetness\n' +
+          '• Great for a quick, refreshing start to the day',
         ingredients: [
-          { productId: products[0]?._id || products[0], name: 'Bananas', quantity: '2 medium' },
-          { productId: products[1]?._id || products[1], name: 'Spinach', quantity: '1 cup' },
-          { productId: products[2]?._id || products[2], name: 'Milk', quantity: '1/2 cup' }
+          { productId: findProductId('Organic Bananas'), name: 'Organic Bananas', quantity: '2 medium' },
+          { productId: findProductId('Frozen Organic Berries Mix'), name: 'Frozen Organic Berries Mix', quantity: '1 cup' },
+          { productId: findProductId('Organic Whole Milk'), name: 'Organic Whole Milk', quantity: '1/2 cup' },
+          { productId: findProductId('Greek Yogurt - Plain'), name: 'Greek Yogurt - Plain', quantity: '1/2 cup' },
+          { productId: findProductId('Granola Clusters - Honey & Almond'), name: 'Granola Clusters - Honey & Almond', quantity: '1/4 cup' }
         ],
         instructions: [
-          'Peel and slice the bananas.',
-          'Add bananas, spinach, and milk to a blender.',
-          'Blend until completely smooth and creamy.',
-          'Pour into bowls and top with fresh fruits and granola.',
+          'Add bananas, frozen berries, milk, and yogurt to a blender.',
+          'Blend until thick and smooth, adjusting liquid to reach desired texture.',
+          'Pour into a bowl and top with granola and a few fresh berries.',
           'Serve immediately while cold.'
         ],
-        dietaryTags: ['vegan', 'vegetarian', 'gluten-free'],
+        dietaryTags: ['vegetarian', 'gluten-free'],
         image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=500',
         prepTime: 10,
         cookTime: 0,
         servings: 2,
-        rating: 4.5,
-        reviewCount: 45
+        rating: 4.7,
+        reviewCount: 58
       },
       {
-        name: 'Garden Fresh Salad',
+        name: 'Avocado Toast with Eggs',
         description:
-          '• Light, crisp salad built around fresh leafy greens\n' +
-          '• Easy way to use up extra vegetables in the fridge\n' +
-          '• Works as a side dish or a light main\n' +
-          '• Customizable with any dressing you like',
+          '• Simple and filling breakfast or brunch\n' +
+          '• Combines healthy fats, protein, and whole grains\n' +
+          '• Customizable with toppings like tomatoes or greens\n' +
+          '• Works well for meal-prepped mornings',
         ingredients: [
-          { productId: products[1]?._id || products[1], name: 'Spinach', quantity: '2 cups' },
-          { productId: products[3]?._id || products[3], name: 'Tomatoes', quantity: '2 medium' },
-          { productId: products[4]?._id || products[4], name: 'Cucumber', quantity: '1 medium' }
+          { productId: findProductId('Whole Wheat Bread'), name: 'Whole Wheat Bread', quantity: '2 slices' },
+          { productId: findProductId('Organic Avocados'), name: 'Organic Avocados', quantity: '1 medium' },
+          { productId: findProductId('Cage-Free Eggs'), name: 'Cage-Free Eggs', quantity: '2 eggs' },
+          { productId: findProductId('Cherry Tomatoes'), name: 'Cherry Tomatoes', quantity: '6–8 pieces' }
         ],
         instructions: [
-          'Wash and dry all vegetables thoroughly.',
-          'Chop spinach, tomatoes, and cucumber into bite-sized pieces.',
-          'Add everything to a large mixing bowl.',
-          'Drizzle with your favorite dressing and toss gently.',
-          'Serve immediately for best texture.'
-        ],
-        dietaryTags: ['vegan', 'vegetarian', 'gluten-free', 'keto'],
-        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500',
-        prepTime: 15,
-        cookTime: 0,
-        servings: 4,
-        rating: 4.3,
-        reviewCount: 32
-      },
-      {
-        name: 'Creamy Pasta Primavera',
-        description:
-          '• Comforting pasta dish loaded with vegetables\n' +
-          '• Simple creamy sauce made from basic ingredients\n' +
-          '• Great choice for weeknight family dinners\n' +
-          '• Easy to adapt with whatever vegetables you have',
-        ingredients: [
-          { productId: products[5]?._id || products[5], name: 'Pasta', quantity: '250g' },
-          { productId: products[2]?._id || products[2], name: 'Milk', quantity: '1 cup' },
-          { productId: products[3]?._id || products[3], name: 'Tomatoes', quantity: '3 medium' }
-        ],
-        instructions: [
-          'Cook pasta in salted boiling water according to package instructions.',
-          'While pasta cooks, sauté chopped tomatoes and other vegetables in a pan with a bit of oil.',
-          'Stir in milk and season with salt, pepper, and herbs.',
-          'Simmer the sauce until slightly thickened.',
-          'Drain pasta, combine with the sauce, and serve hot.'
+          'Toast the whole wheat bread until golden.',
+          'Mash avocado with salt, pepper, and a squeeze of lemon if available.',
+          'Cook eggs to your preference (fried, poached, or scrambled).',
+          'Spread avocado on toast, top with eggs and halved cherry tomatoes, then serve.'
         ],
         dietaryTags: ['vegetarian'],
-        image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500',
-        prepTime: 10,
-        cookTime: 20,
-        servings: 4,
-        rating: 4.7,
-        reviewCount: 89
-      },
-      {
-        name: 'Grilled Chicken Salad',
-        description:
-          '• High-protein salad with fresh greens and juicy chicken\n' +
-          '• Works as a full meal, not just a side\n' +
-          '• Easy to meal-prep for lunches\n' +
-          '• Can be topped with any dressing or vinaigrette you prefer',
-        ingredients: [
-          { productId: products[6]?._id || products[6], name: 'Chicken Breast', quantity: '2 pieces' },
-          { productId: products[1]?._id || products[1], name: 'Spinach', quantity: '3 cups' },
-          { productId: products[3]?._id || products[3], name: 'Tomatoes', quantity: '2 medium' }
-        ],
-        instructions: [
-          'Season chicken breasts with salt, pepper, and your favorite spices.',
-          'Grill or pan-cook the chicken until fully cooked and golden.',
-          'Let the chicken rest for a few minutes, then slice thinly.',
-          'Arrange spinach and chopped tomatoes in a bowl.',
-          'Top with sliced chicken and your dressing of choice.'
-        ],
-        dietaryTags: ['gluten-free', 'keto'],
         image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500',
-        prepTime: 15,
-        cookTime: 15,
-        servings: 2,
-        rating: 4.6,
-        reviewCount: 67
-      },
-      {
-        name: 'Vegetable Stir Fry',
-        description:
-          '• Quick stir fry using everyday vegetables\n' +
-          '• Great base recipe to pair with rice or noodles\n' +
-          '• Easy way to add more vegetables into your day\n' +
-          '• Done in about 20 minutes from start to finish',
-        ingredients: [
-          { productId: products[1]?._id || products[1], name: 'Spinach', quantity: '2 cups' },
-          { productId: products[4]?._id || products[4], name: 'Cucumber', quantity: '1 medium, sliced' },
-          { productId: products[3]?._id || products[3], name: 'Tomatoes', quantity: '2 medium, chopped' }
-        ],
-        instructions: [
-          'Heat a tablespoon of oil in a large pan or wok.',
-          'Add chopped vegetables and stir fry over high heat for about 5 minutes.',
-          'Add soy sauce or your preferred stir fry sauce.',
-          'Cook for another 3–5 minutes until vegetables are tender-crisp.',
-          'Serve hot over cooked rice or noodles.'
-        ],
-        dietaryTags: ['vegan', 'vegetarian', 'gluten-free'],
-        image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=500',
         prepTime: 10,
         cookTime: 10,
-        servings: 3,
-        rating: 4.4,
-        reviewCount: 54
+        servings: 1,
+        rating: 4.8,
+        reviewCount: 72
       },
       {
-        name: 'Berry Parfait',
+        name: 'Quinoa Power Veggie Bowl',
         description:
-          '• Simple layered dessert or snack with yogurt and berries\n' +
-          '• Looks fancy but uses very few ingredients\n' +
-          '• Great way to use mixed frozen or fresh berries\n' +
-          '• Can be prepped in advance and chilled',
+          '• Balanced lunch or dinner bowl\n' +
+          '• Combines quinoa, greens, and vegetables\n' +
+          '• High in plant-based protein and fiber\n' +
+          '• Easy to customize with your favorite toppings',
         ingredients: [
-          { productId: products[2]?._id || products[2], name: 'Milk / Yogurt Base', quantity: '1 cup' },
-          { productId: products[0]?._id || products[0], name: 'Bananas', quantity: '1 medium, sliced' },
-          { productId: products[7]?._id || products[7], name: 'Berries', quantity: '1 cup' }
+          { productId: findProductId('Organic Quinoa'), name: 'Organic Quinoa', quantity: '1 cup (uncooked)' },
+          { productId: findProductId('Fresh Spinach'), name: 'Fresh Spinach', quantity: '2 cups' },
+          { productId: findProductId('Organic Broccoli'), name: 'Organic Broccoli', quantity: '1 cup florets' },
+          { productId: findProductId('Cherry Tomatoes'), name: 'Cherry Tomatoes', quantity: '1 cup' },
+          { productId: findProductId('Canned Black Beans'), name: 'Canned Black Beans', quantity: '1/2 cup (rinsed)' }
         ],
         instructions: [
-          'Add a spoonful of yogurt or creamy base to the bottom of a glass.',
-          'Layer in sliced bananas and berries.',
-          'Add another layer of yogurt and repeat the fruit layers.',
-          'Top with granola or nuts if desired.',
-          'Serve immediately or chill for later.'
+          'Cook quinoa according to package instructions and fluff with a fork.',
+          'Lightly steam or sauté broccoli until tender-crisp.',
+          'In a bowl, add a base of spinach, then top with quinoa, broccoli, black beans, and cherry tomatoes.',
+          'Drizzle with your favorite dressing or a simple olive oil and lemon mix.'
         ],
-        dietaryTags: ['vegetarian', 'gluten-free'],
+        dietaryTags: ['vegan', 'vegetarian', 'gluten-free'],
+        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500',
+        prepTime: 15,
+        cookTime: 20,
+        servings: 3,
+        rating: 4.6,
+        reviewCount: 64
+      },
+      {
+        name: 'Chicken & Broccoli Brown Rice Stir-Fry',
+        description:
+          '• Quick one-pan dinner option\n' +
+          '• Uses lean protein, whole grains, and vegetables\n' +
+          '• Great for meal prep and leftovers\n' +
+          '• Easy to flavor with your favorite stir-fry sauce',
+        ingredients: [
+          { productId: findProductId('Chicken Breast Fillets'), name: 'Chicken Breast Fillets', quantity: '2 medium fillets' },
+          { productId: findProductId('Organic Broccoli'), name: 'Organic Broccoli', quantity: '2 cups florets' },
+          { productId: findProductId('Brown Rice - Long Grain'), name: 'Brown Rice - Long Grain', quantity: '1 cup (uncooked)' },
+          { productId: findProductId('Fresh Spinach'), name: 'Fresh Spinach', quantity: '1 cup' }
+        ],
+        instructions: [
+          'Cook brown rice according to package instructions.',
+          'Slice chicken into thin strips and season lightly with salt and pepper.',
+          'In a hot pan, cook chicken until browned and fully cooked.',
+          'Add broccoli and spinach, stir-fry with a splash of water or sauce until vegetables are tender.',
+          'Serve stir-fry over warm brown rice.'
+        ],
+        dietaryTags: ['gluten-free'],
+        image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=500',
+        prepTime: 15,
+        cookTime: 20,
+        servings: 3,
+        rating: 4.7,
+        reviewCount: 81
+      },
+      {
+        name: 'Salmon with Roasted Veggies',
+        description:
+          '• Simple, oven-based dinner\n' +
+          '• Pairs salmon with colorful roasted vegetables\n' +
+          '• Rich in protein and healthy fats\n' +
+          '• Minimal prep with big flavor',
+        ingredients: [
+          { productId: findProductId('Salmon Fillet'), name: 'Salmon Fillet', quantity: '2 fillets' },
+          { productId: findProductId('Organic Broccoli'), name: 'Organic Broccoli', quantity: '1.5 cups florets' },
+          { productId: findProductId('Baby Carrots'), name: 'Baby Carrots', quantity: '1 cup' },
+          { productId: findProductId('Cherry Tomatoes'), name: 'Cherry Tomatoes', quantity: '1 cup' }
+        ],
+        instructions: [
+          'Preheat oven to 200°C (400°F).',
+          'Place salmon on a lined baking tray and season with salt, pepper, and a little oil or lemon.',
+          'Add broccoli, baby carrots, and cherry tomatoes around the salmon and drizzle with oil.',
+          'Roast for 15–20 minutes until salmon is cooked through and vegetables are tender.',
+          'Serve hot straight from the tray.'
+        ],
+        dietaryTags: ['gluten-free', 'keto', 'paleo'],
+        image: 'https://images.unsplash.com/photo-1615937691194-96f1628985f3?w=500',
+        prepTime: 15,
+        cookTime: 20,
+        servings: 2,
+        rating: 4.8,
+        reviewCount: 93
+      },
+      {
+        name: 'Peanut Butter Overnight Oats',
+        description:
+          '• Make-ahead breakfast that saves time\n' +
+          '• Combines oats, milk, and peanut butter for lasting energy\n' +
+          '• Easy to customize with fruit or seeds\n' +
+          '• Perfect for busy weekday mornings',
+        ingredients: [
+          { productId: findProductId('Rolled Oats'), name: 'Rolled Oats', quantity: '1/2 cup' },
+          { productId: findProductId('Organic Peanut Butter'), name: 'Organic Peanut Butter', quantity: '2 tbsp' },
+          { productId: findProductId('Organic Whole Milk'), name: 'Organic Whole Milk', quantity: '1/2 cup' },
+          { productId: findProductId('Organic Bananas'), name: 'Organic Bananas', quantity: '1 small (sliced)' },
+          { productId: findProductId('Chia Seeds'), name: 'Chia Seeds', quantity: '1 tbsp' }
+        ],
+        instructions: [
+          'In a jar or container, combine oats, milk, peanut butter, and chia seeds.',
+          'Stir well until everything is evenly mixed.',
+          'Top with sliced banana, cover, and refrigerate overnight.',
+          'Enjoy cold the next morning, adding extra milk if needed.'
+        ],
+        dietaryTags: ['vegetarian'],
+        image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=500',
+        prepTime: 10,
+        cookTime: 0,
+        servings: 1,
+        rating: 4.6,
+        reviewCount: 69
+      },
+      {
+        name: 'Greek Yogurt Berry Parfait',
+        description:
+          '• Light dessert or snack with balanced macros\n' +
+          '• Layers of yogurt, fruit, and crunchy toppings\n' +
+          '• Easy to assemble in minutes\n' +
+          '• Looks impressive in a glass or jar',
+        ingredients: [
+          { productId: findProductId('Greek Yogurt - Plain'), name: 'Greek Yogurt - Plain', quantity: '1 cup' },
+          { productId: findProductId('Strawberries'), name: 'Strawberries', quantity: '1/2 cup (sliced)' },
+          { productId: findProductId('Blueberries'), name: 'Blueberries', quantity: '1/2 cup' },
+          { productId: findProductId('Granola Clusters - Honey & Almond'), name: 'Granola Clusters - Honey & Almond', quantity: '1/4 cup' }
+        ],
+        instructions: [
+          'Add a layer of Greek yogurt to a glass or bowl.',
+          'Top with a mix of sliced strawberries and blueberries.',
+          'Sprinkle with granola for crunch.',
+          'Repeat the layers if desired and serve immediately.'
+        ],
+        dietaryTags: ['vegetarian'],
         image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500',
         prepTime: 10,
         cookTime: 0,
         servings: 2,
-        rating: 4.8,
-        reviewCount: 78
+        rating: 4.7,
+        reviewCount: 88
       },
       {
-        name: 'Avocado Toast Deluxe',
+        name: 'Simple Black Bean & Rice Bowl',
         description:
-          '• Upgraded avocado toast with fresh toppings\n' +
-          '• Ideal for a quick breakfast or light lunch\n' +
-          '• Easy to customize with extra toppings like eggs or seeds\n' +
-          '• Uses basic pantry and fridge ingredients',
+          '• Budget-friendly, filling meal\n' +
+          '• Uses pantry staples like rice and beans\n' +
+          '• Easy to batch-cook for multiple portions\n' +
+          '• Can be topped with avocado, yogurt, or salsa',
         ingredients: [
-          { productId: products[8]?._id || products[8], name: 'Bread', quantity: '2 slices' },
-          { productId: products[9]?._id || products[9], name: 'Avocado', quantity: '1 medium' },
-          { productId: products[3]?._id || products[3], name: 'Tomatoes', quantity: '1 medium, sliced' }
+          { productId: findProductId('Brown Rice - Long Grain'), name: 'Brown Rice - Long Grain', quantity: '1 cup (uncooked)' },
+          { productId: findProductId('Canned Black Beans'), name: 'Canned Black Beans', quantity: '1 cup (rinsed)' },
+          { productId: findProductId('Cherry Tomatoes'), name: 'Cherry Tomatoes', quantity: '1/2 cup (halved)' },
+          { productId: findProductId('Fresh Spinach'), name: 'Fresh Spinach', quantity: '1 cup' },
+          { productId: findProductId('Organic Avocados'), name: 'Organic Avocados', quantity: '1/2 medium (diced)' }
         ],
         instructions: [
-          'Toast the bread slices until golden and crisp.',
-          'Mash the avocado with a pinch of salt, pepper, and a squeeze of lemon.',
-          'Spread the mashed avocado evenly over the toast.',
-          'Top with tomato slices and any extra seasonings you like.',
-          'Serve immediately for best texture.'
-        ],
-        dietaryTags: ['vegan', 'vegetarian'],
-        image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?w=500',
-        prepTime: 5,
-        cookTime: 5,
-        servings: 2,
-        rating: 4.5,
-        reviewCount: 92
-      },
-      {
-        name: 'Quinoa Power Bowl',
-        description:
-          '• Filling grain bowl built around protein-rich quinoa\n' +
-          '• Packs in fresh greens and colorful vegetables\n' +
-          '• Works warm or at room temperature\n' +
-          '• Great option for meal prep lunches',
-        ingredients: [
-          { productId: products[10]?._id || products[10], name: 'Quinoa', quantity: '1 cup (uncooked)' },
-          { productId: products[1]?._id || products[1], name: 'Spinach', quantity: '2 cups' },
-          { productId: products[3]?._id || products[3], name: 'Tomatoes', quantity: '2 medium' }
-        ],
-        instructions: [
-          'Rinse quinoa under cold water, then cook according to package instructions.',
-          'While quinoa cooks, chop spinach and tomatoes.',
-          'Fluff cooked quinoa with a fork and let it cool slightly.',
-          'Combine quinoa, spinach, and tomatoes in a bowl.',
-          'Add dressing or a simple olive oil and lemon mix, then serve.'
+          'Cook brown rice according to package instructions.',
+          'Warm black beans in a small pot with a pinch of salt, pepper, and any spices you like.',
+          'In a bowl, add rice as the base, then layer beans, spinach, cherry tomatoes, and diced avocado.',
+          'Serve as is or with a squeeze of lime and a spoon of yogurt or salsa if available.'
         ],
         dietaryTags: ['vegan', 'vegetarian', 'gluten-free'],
-        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500',
+        image: 'https://images.unsplash.com/photo-1604908176997-1251884b08a3?w=500',
         prepTime: 15,
-        cookTime: 20,
+        cookTime: 25,
         servings: 3,
-        rating: 4.6,
-        reviewCount: 56
-      },
-      {
-        name: 'Hearty Veggie Omelette',
-        description:
-          '• Protein-rich breakfast packed with fresh vegetables\n' +
-          '• Simple one-pan recipe with minimal cleanup\n' +
-          '• Customizable with any leftover veggies and cheese\n' +
-          '• Keeps you full for a long morning',
-        ingredients: [
-          { productId: products[10]?._id || products[10], name: 'Eggs', quantity: '3 large' },
-          { productId: products[1]?._id || products[1], name: 'Spinach', quantity: '1 cup, chopped' },
-          { productId: products[3]?._id || products[3], name: 'Tomatoes', quantity: '1 medium, diced' }
-        ],
-        instructions: [
-          'Crack eggs into a bowl, season with salt and pepper, and whisk well.',
-          'Heat a non-stick pan with a little oil or butter.',
-          'Add spinach and tomatoes and sauté for 1–2 minutes.',
-          'Pour in the eggs and cook on low heat until set.',
-          'Fold the omelette gently and serve warm.'
-        ],
-        dietaryTags: ['gluten-free', 'keto'],
-        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500',
-        prepTime: 10,
-        cookTime: 10,
-        servings: 1,
-        rating: 4.7,
+        rating: 4.5,
         reviewCount: 61
       },
       {
-        name: 'Overnight Berry Oats',
+        name: 'Veggie Hummus Snack Plate',
         description:
-          '• No-cook breakfast you prepare the night before\n' +
-          '• Soft, creamy oats with a berry topping\n' +
-          '• Perfect grab-and-go option for busy mornings\n' +
-          '• Easy to scale up for multiple servings',
+          '• Quick no-cook snack or light lunch\n' +
+          '• Combines fresh vegetables, hummus, and crunchy extras\n' +
+          '• Great for sharing or serving as an appetizer\n' +
+          '• Easy way to increase daily veggie intake',
         ingredients: [
-          { productId: products[10]?._id || products[10], name: 'Oats / Grain Base', quantity: '1/2 cup' },
-          { productId: products[2]?._id || products[2], name: 'Milk', quantity: '1/2 cup' },
-          { productId: products[7]?._id || products[7], name: 'Berries', quantity: '1/2 cup' }
+          { productId: findProductId('Hummus - Classic'), name: 'Hummus - Classic', quantity: '1/2 cup' },
+          { productId: findProductId('Baby Carrots'), name: 'Baby Carrots', quantity: '1 cup' },
+          { productId: findProductId('Cherry Tomatoes'), name: 'Cherry Tomatoes', quantity: '1 cup' },
+          { productId: findProductId('Organic Almonds'), name: 'Organic Almonds', quantity: '1/4 cup' },
+          { productId: findProductId('Kettle Cooked Potato Chips - Sea Salt'), name: 'Kettle Cooked Potato Chips - Sea Salt', quantity: '1 small handful' }
         ],
         instructions: [
-          'Add oats to a jar or container.',
-          'Pour in milk and stir to combine.',
-          'Top with berries and a drizzle of honey if desired.',
-          'Cover and refrigerate overnight.',
-          'Stir and enjoy straight from the fridge in the morning.'
+          'Arrange hummus in a small bowl at the center of a plate or board.',
+          'Place baby carrots, cherry tomatoes, almonds, and chips around the hummus.',
+          'Serve immediately as a dip-style snack plate.',
+          'Customize with extra vegetables or crackers if desired.'
         ],
-        dietaryTags: ['vegetarian'],
-        image: 'https://images.unsplash.com/photo-1590080874087-51e37783714a?w=500',
+        dietaryTags: ['vegetarian', 'gluten-free'],
+        image: 'https://images.unsplash.com/photo-1615937669766-76c3c5c9e6c3?w=500',
         prepTime: 10,
         cookTime: 0,
-        servings: 1,
-        rating: 4.6,
-        reviewCount: 48
-      },
-      {
-        name: 'One-Pan Chicken & Veggies',
-        description:
-          '• Simple tray bake with chicken and mixed vegetables\n' +
-          '• Minimal chopping and only one pan to wash\n' +
-          '• Balanced dinner with protein and fiber\n' +
-          '• Easy to double for meal prep',
-        ingredients: [
-          { productId: products[6]?._id || products[6], name: 'Chicken Breast', quantity: '2 pieces' },
-          { productId: products[11]?._id || products[11], name: 'Broccoli', quantity: '2 cups, florets' },
-          { productId: products[3]?._id || products[3], name: 'Tomatoes', quantity: '1–2 medium' }
-        ],
-        instructions: [
-          'Preheat oven to 200°C (390°F).',
-          'Place chicken, broccoli florets, and chopped tomatoes on a baking tray.',
-          'Drizzle with olive oil and season well with salt, pepper, and herbs.',
-          'Bake for 20–25 minutes, until chicken is cooked through.',
-          'Serve straight from the tray while hot.'
-        ],
-        dietaryTags: ['gluten-free', 'keto', 'paleo'],
-        image: 'https://images.unsplash.com/photo-1546069901-5ec6a79120b0?w=500',
-        prepTime: 15,
-        cookTime: 25,
         servings: 2,
-        rating: 4.7,
-        reviewCount: 73
+        rating: 4.4,
+        reviewCount: 52
       },
       {
-        name: 'Simple Green Detox Smoothie',
+        name: 'Margherita Pizza & Side Salad',
         description:
-          '• Light green smoothie that feels refreshing, not heavy\n' +
-          '• Uses common greens and fruits, no exotic ingredients\n' +
-          '• Great mid-morning or afternoon snack\n' +
-          '• Can be adjusted by adding more fruit for sweetness',
+          '• Easy comfort meal using a frozen pizza base\n' +
+          '• Paired with a fresh side salad for balance\n' +
+          '• Great for lazy evenings with minimal cooking\n' +
+          '• Can be shared or scaled for more people',
         ingredients: [
-          { productId: products[1]?._id || products[1], name: 'Spinach', quantity: '1 generous handful' },
-          { productId: products[0]?._id || products[0], name: 'Bananas', quantity: '1 medium' },
-          { productId: products[2]?._id || products[2], name: 'Milk / Liquid Base', quantity: '1 cup' }
+          { productId: findProductId('Frozen Margherita Pizza'), name: 'Frozen Margherita Pizza', quantity: '1 pizza' },
+          { productId: findProductId('Fresh Spinach'), name: 'Fresh Spinach', quantity: '2 cups' },
+          { productId: findProductId('Cherry Tomatoes'), name: 'Cherry Tomatoes', quantity: '1 cup' },
+          { productId: findProductId('Cage-Free Eggs'), name: 'Cage-Free Eggs', quantity: '1 egg (optional, fried on top)' }
         ],
         instructions: [
-          'Add spinach, banana, and milk or water to a blender.',
-          'Blend on high until the mixture is completely smooth.',
-          'Taste and adjust sweetness if needed.',
-          'Pour into a glass and serve chilled.',
-          'Optional: add ice cubes and blend again for an extra cold drink.'
+          'Bake the frozen margherita pizza according to package instructions.',
+          'While pizza bakes, mix spinach and halved cherry tomatoes in a bowl with simple dressing.',
+          'Optionally, fry one egg and place it on top of the baked pizza for extra protein.',
+          'Serve slices of pizza with a side of fresh salad.'
         ],
-        dietaryTags: ['vegan', 'vegetarian', 'gluten-free'],
-        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500',
-        prepTime: 8,
+        dietaryTags: ['vegetarian'],
+        image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500',
+        prepTime: 10,
+        cookTime: 15,
+        servings: 2,
+        rating: 4.3,
+        reviewCount: 47
+      },
+      {
+        name: 'Trail Mix Energy Bites (No Bake)',
+        description:
+          '• Sweet and nutty bite-sized snacks\n' +
+          '• Uses pantry staples like oats, peanut butter, and trail mix\n' +
+          '• No baking required, just mix and chill\n' +
+          '• Ideal for pre-workout or afternoon energy boosts',
+        ingredients: [
+          { productId: findProductId('Rolled Oats'), name: 'Rolled Oats', quantity: '1 cup' },
+          { productId: findProductId('Organic Peanut Butter'), name: 'Organic Peanut Butter', quantity: '1/2 cup' },
+          { productId: findProductId('Trail Mix - Nuts & Dried Fruit'), name: 'Trail Mix - Nuts & Dried Fruit', quantity: '1/2 cup' },
+          { productId: findProductId('Chia Seeds'), name: 'Chia Seeds', quantity: '2 tbsp' }
+        ],
+        instructions: [
+          'In a mixing bowl, combine oats, peanut butter, trail mix, and chia seeds.',
+          'Stir until the mixture is thick and sticky. Add a splash of water or honey if needed to bind.',
+          'Roll into small bite-sized balls using your hands.',
+          'Refrigerate for at least 30 minutes before serving for best texture.'
+        ],
+        dietaryTags: ['vegetarian'],
+        image: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500',
+        prepTime: 20,
         cookTime: 0,
-        servings: 1,
-        rating: 4.4,
-        reviewCount: 39
+        servings: 4,
+        rating: 4.6,
+        reviewCount: 59
       }
     ];
 
-    // Insert sample recipes
+    // Optional: sanity check for missing productIds
+    sampleRecipes.forEach((recipe) => {
+      recipe.ingredients.forEach((ing) => {
+        if (!ing.productId) {
+          throw new Error(
+            `Missing productId for ingredient "${ing.name}" in recipe "${recipe.name}". ` +
+            `Make sure the product exists and the name matches exactly.`
+          );
+        }
+      });
+    });
+
     const createdRecipes = await Recipe.insertMany(sampleRecipes);
     console.log(`Seeded ${createdRecipes.length} recipes successfully`);
 

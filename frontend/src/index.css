@@ -25,9 +25,9 @@ code {
   /* Neon Color Scheme */
   --primary-color: #0066ff; /* Neon Dark Blue */
   --secondary-color: #00ccff; /* Light Neon Blue */
-  --accent-pink: #ff00ff; /* Neon Pink */
-  --accent-purple: #cc00ff; /* Neon Purple */
-  --bg-dark-neon-blue: #001a33; /* Dark Neon Blue Background */
+  --accent-pink: #ff54d4; /* Neon Pink */
+  --accent-purple: #de5cff; /* Neon Purple */
+  --bg-dark-neon-blue: #121314; /* Dark Neon Blue Background */
   --success-color: #00ff00;
   --danger-color: #ff0066;
   --warning-color: #ffcc00;
