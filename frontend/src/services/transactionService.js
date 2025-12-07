@@ -18,12 +18,10 @@ export const getCashflowStatement = async (params = {}) => {
   return response.data;
 };
 
+// ✅ Fixed: use axios instance with Authorization header and get a blob
 export const downloadCashflowPDF = (params = {}) => {
-  const queryString = new URLSearchParams(params).toString();
-  const token = localStorage.getItem('token');
-  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-  
-  // Open in new tab to trigger download
-  window.open(`${apiUrl}/transactions/statement/pdf?${queryString}&token=${token}`, '_blank');
+  return api.get('/transactions/statement/pdf', {
+    params,
+    responseType: 'blob', // tell axios we're expecting a PDF
+  });
 };
-

@@ -177,6 +177,9 @@ ISC
 ## 👥 Contributors
 
 - Syeda Faiza Fatima
+- Momin Malik
+-Shamsher Ali
+Muhammad Basim Zafar
 
 ## 📖 Documentation
 

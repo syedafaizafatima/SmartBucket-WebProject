@@ -109,15 +109,18 @@ const Financial = () => {
     }
   };
 
+  // ✅ Updated to work with the new downloadCashflowPDF
   const handleDownloadPDF = async () => {
+    setError('');
+    setSuccess('');
+
     try {
-      setSuccess('Generating PDF...');
       const params = {};
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
-      
+
       const response = await downloadCashflowPDF(params);
-      
+
       // Create blob and download
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
@@ -128,9 +131,10 @@ const Financial = () => {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      
+
       setSuccess('PDF downloaded successfully!');
     } catch (err) {
+      console.error(err);
       setError(err.response?.data?.message || 'Failed to download PDF');
     }
   };
@@ -191,7 +195,9 @@ const Financial = () => {
                 <Card.Title className="text-success">
                   <span className="floating-icon">💰</span> Total Credits
                 </Card.Title>
-                <h3 className="text-success">${statement.summary?.totalCredits?.toFixed(2) || '0.00'}</h3>
+                <h3 className="text-success">
+                  ${statement.summary?.totalCredits?.toFixed(2) || '0.00'}
+                </h3>
                 <small className="text-muted">Income</small>
               </Card.Body>
             </Card>
@@ -202,13 +208,18 @@ const Financial = () => {
                 <Card.Title className="text-danger">
                   <span className="floating-icon" style={{ animationDelay: '2s' }}>💸</span> Total Debits
                 </Card.Title>
-                <h3 className="text-danger">${statement.summary?.totalDebits?.toFixed(2) || '0.00'}</h3>
+                <h3 className="text-danger">
+                  ${statement.summary?.totalDebits?.toFixed(2) || '0.00'}
+                </h3>
                 <small className="text-muted">Expenses</small>
               </Card.Body>
             </Card>
           </Col>
           <Col md={4}>
-            <Card className={`text-center border-${statement.summary?.netCashflow >= 0 ? 'primary' : 'warning'} glow-effect`} style={{ animationDelay: '3s' }}>
+            <Card
+              className={`text-center border-${statement.summary?.netCashflow >= 0 ? 'primary' : 'warning'} glow-effect`}
+              style={{ animationDelay: '3s' }}
+            >
               <Card.Body>
                 <Card.Title className={`text-${statement.summary?.netCashflow >= 0 ? 'primary' : 'warning'}`}>
                   <span className="floating-icon">📈</span> Net Cashflow
@@ -287,7 +298,9 @@ const Financial = () => {
         </Card.Header>
         <Card.Body>
           {transactions.length === 0 ? (
-            <Alert variant="info">No transactions found. Add your first transaction to get started!</Alert>
+            <Alert variant="info">
+              No transactions found. Add your first transaction to get started!
+            </Alert>
           ) : (
             <div className="table-responsive">
               <Table striped hover>
@@ -407,4 +420,3 @@ const Financial = () => {
 };
 
 export default Financial;
-

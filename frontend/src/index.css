@@ -10,8 +10,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #eef7ff !important; /* Dark Neon Blue Background */
-  color: #ffffff; /* White text for contrast */
+  background-color: #f4f7fb !important; /* Soft light background */
+  color: #111827; /* Dark gray text for readability */
   min-height: 100vh;
 }
 
@@ -20,76 +20,94 @@ code {
     monospace;
 }
 
-/* Custom styles */
+/* ===========================
+   Theme Variables (Pastel)
+   =========================== */
 :root {
-  /* Neon Color Scheme */
-  --primary-color: #0066ff; /* Neon Dark Blue */
-  --secondary-color: #00ccff; /* Light Neon Blue */
-  --accent-pink: #ff54d4; /* Neon Pink */
-  --accent-purple: #de5cff; /* Neon Purple */
-  --bg-dark-neon-blue: #121314; /* Dark Neon Blue Background */
-  --success-color: #00ff00;
-  --danger-color: #ff0066;
-  --warning-color: #ffcc00;
-  --info-color: #00ccff;
-  
+  /* Pastel Color Scheme */
+  --primary-color: #3b82f6;      /* Soft blue */
+  --secondary-color: #38bdf8;    /* Light aqua blue */
+  --accent-pink: #f9a8d4;        /* Pastel pink */
+  --accent-purple: #c4b5fd;      /* Pastel lavender */
+  --bg-page: #f4f7fb;            /* Page background */
+  --bg-surface: #ffffff;         /* Card / surface background */
+  --bg-muted: #e0ecff;           /* Subtle section background */
+  --success-color: #16a34a;
+  --danger-color: #ef4444;
+  --warning-color: #facc15;
+  --info-color: #0ea5e9;
+
   /* Bootstrap overrides */
-  --bs-primary: #0066ff;
-  --bs-secondary: #00ccff;
-  --bs-primary-rgb: 0, 102, 255;
-  --bs-secondary-rgb: 0, 204, 255;
+  --bs-primary: #3b82f6;
+  --bs-secondary: #38bdf8;
+  --bs-primary-rgb: 59, 130, 246;
+  --bs-secondary-rgb: 56, 189, 248;
 }
 
-/* Bootstrap color overrides */
+/* ===========================
+   Buttons
+   =========================== */
 .btn-primary {
   background-color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
-  color: white !important;
+  color: #ffffff !important;
 }
 
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
-  background-color: var(--accent-purple) !important;
-  border-color: var(--accent-purple) !important;
-  box-shadow: 0 0 15px rgba(204, 0, 255, 0.7) !important;
-  transform: scale(1.02);
+  background-color: #2563eb !important; /* Slightly deeper blue */
+  border-color: #2563eb !important;
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.35) !important;
+  transform: scale(1.01);
 }
 
 .btn-secondary {
   background-color: var(--secondary-color) !important;
   border-color: var(--secondary-color) !important;
-  color: white !important;
+  color: #0f172a !important;
 }
 
 .btn-secondary:hover,
 .btn-secondary:focus,
 .btn-secondary:active {
-  background-color: #00b3e6 !important;
-  border-color: #00b3e6 !important;
-  box-shadow: 0 0 10px rgba(0, 204, 255, 0.5) !important;
+  background-color: #0ea5e9 !important;
+  border-color: #0ea5e9 !important;
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.3) !important;
 }
 
+/* Generic hover glow for buttons */
+button:hover,
+.btn:hover {
+  box-shadow: 0 0 10px rgba(148, 163, 246, 0.6) !important;
+}
+
+/* ===========================
+   Navbar
+   =========================== */
 .navbar {
-  background-color: var(--primary-color) !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
 .navbar-brand,
 .navbar-nav .nav-link {
-  color: white !important;
+  color: #1f2937 !important;
 }
 
 .navbar-nav .nav-link:hover {
-  color: var(--accent-purple) !important;
-  text-shadow: 0 0 10px var(--accent-purple);
+  color: var(--primary-color) !important;
+  text-shadow: none;
 }
 
 .navbar-nav .nav-link.active {
-  color: var(--accent-purple) !important;
-  font-weight: bold;
-  text-shadow: 0 0 10px var(--accent-purple);
+  color: var(--primary-color) !important;
+  font-weight: 600;
 }
 
+/* ===========================
+   Background helpers
+   =========================== */
 .bg-primary {
   background-color: var(--primary-color) !important;
 }
@@ -114,7 +132,7 @@ code {
   border-color: var(--secondary-color) !important;
 }
 
-/* Accent colors */
+/* Accent utility classes */
 .accent-pink {
   color: var(--accent-pink) !important;
 }
@@ -131,44 +149,51 @@ code {
   background-color: var(--accent-purple) !important;
 }
 
-/* Card hover effects with neon glow */
+/* ===========================
+   Cards (Pastel surfaces)
+   =========================== */
 .card {
-  border: 1px solid rgba(0, 102, 255, 0.2);
-  transition: all 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.05) !important; /* Slightly transparent white for dark background */
-  color: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  transition: all 0.25s ease;
+  background-color: var(--bg-surface) !important;
+  color: #111827;
 }
 
 .card:hover {
-  border-color: var(--accent-purple) !important;
-  box-shadow: 0 0 20px rgba(204, 0, 255, 0.5) !important;
-  transform: translateY(-5px);
-  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(129, 140, 248, 0.7) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
+  transform: translateY(-4px);
+  background-color: #ffffff !important;
 }
 
 .card-body {
-  color: #ffffff;
+  color: #111827;
 }
 
 .card-title {
-  color: #ffffff;
+  color: #0f172a;
 }
 
 .card-text {
-  color: rgba(255, 255, 255, 0.9);
+  color: #4b5563;
 }
 
-/* Link colors */
+/* ===========================
+   Links
+   =========================== */
 a {
   color: var(--primary-color);
+  text-decoration: none;
 }
 
 a:hover {
-  color: var(--accent-purple) !important;
-  text-shadow: 0 0 8px var(--accent-purple);
+  color: #2563eb !important;
+  text-shadow: none;
 }
 
-/* Badge colors */
+/* ===========================
+   Badge colors
+   =========================== */
 .badge.bg-primary {
   background-color: var(--primary-color) !important;
 }
@@ -177,114 +202,101 @@ a:hover {
   background-color: var(--secondary-color) !important;
 }
 
+/* Slight emphasis on hover */
 .badge:hover {
-  box-shadow: 0 0 10px var(--accent-purple);
-  transform: scale(1.05);
+  box-shadow: 0 0 6px rgba(148, 163, 246, 0.6);
+  transform: scale(1.03);
 }
 
-/* Form controls focus */
+/* ===========================
+   Forms
+   =========================== */
+.form-control,
+.form-select {
+  background-color: #ffffff;
+  border-color: #cbd5f5;
+  color: #111827;
+}
+
 .form-control:focus,
 .form-select:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.25rem rgba(0, 102, 255, 0.25);
+  background-color: #ffffff;
+  border-color: var(--primary-color) !important;
+  color: #111827;
+  box-shadow: 0 0 0 0.18rem rgba(59, 130, 246, 0.35) !important;
 }
 
-/* Alert colors */
-.alert-primary {
-  background-color: rgba(0, 102, 255, 0.1);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
+.form-control::placeholder {
+  color: #9ca3af;
 }
 
-.alert-secondary {
-  background-color: rgba(0, 204, 255, 0.1);
-  border-color: var(--secondary-color);
-  color: var(--secondary-color);
+.form-label {
+  color: #374151;
 }
 
-/* Dark background adjustments */
+/* Extra focus outline */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--accent-purple) !important;
+  outline-offset: 1px;
+}
+
+/* ===========================
+   Layout & Text
+   =========================== */
 .App {
-  background-color: var(--bg-dark-neon-blue);
+  background-color: var(--bg-page);
   min-height: 100vh;
 }
 
 main {
-  background-color: var(--bg-dark-neon-blue);
+  background-color: var(--bg-page);
 }
 
-/* Text color adjustments for dark background */
 .text-muted {
-  color: rgba(255, 255, 255, 0.6) !important;
+  color: #6b7280 !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #ffffff;
+  color: #0f172a;
 }
 
 p {
-  color: rgba(255, 255, 255, 0.9);
+  color: #4b5563;
 }
 
-/* Form controls for dark background */
-.form-control,
-.form-select {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(0, 102, 255, 0.3);
-  color: #ffffff;
-}
-
-.form-control:focus,
-.form-select:focus {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: var(--accent-purple) !important;
-  color: #ffffff;
-  box-shadow: 0 0 0 0.25rem rgba(204, 0, 255, 0.4) !important;
-}
-
-.form-control::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.form-label {
-  color: #ffffff;
-}
-
-/* Container adjustments */
 .container {
   background-color: transparent;
 }
 
-/* Navbar text adjustments */
-.navbar-brand,
-.navbar-nav .nav-link {
-  color: white !important;
-}
-
-/* Footer adjustments */
+/* ===========================
+   Footer
+   =========================== */
 footer {
-  background-color: rgba(0, 26, 51, 0.8);
-  color: rgba(255, 255, 255, 0.8);
+  background-color: #e0ecff;
+  color: #4b5563;
 }
 
-.navbar-brand {
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-
+/* ===========================
+   Product card tweaks
+   =========================== */
 .product-card {
   transition: transform 0.2s;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 20px rgba(204, 0, 255, 0.4) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(148, 163, 246, 0.45) !important;
 }
 
 .product-card:hover .product-image {
-  transform: scale(1.1);
+  transform: scale(1.03);
 }
 
-/* Animations */
+/* ===========================
+   Animations
+   =========================== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -318,10 +330,11 @@ footer {
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 5px var(--accent-purple);
+    box-shadow: 0 0 5px rgba(196, 181, 253, 0.7);
   }
   50% {
-    box-shadow: 0 0 20px var(--accent-purple), 0 0 30px var(--accent-purple);
+    box-shadow: 0 0 16px rgba(196, 181, 253, 0.9),
+                0 0 26px rgba(196, 181, 253, 0.5);
   }
 }
 
@@ -344,12 +357,8 @@ footer {
 
 /* Loading spinner animation */
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 .spinner-border {
@@ -362,7 +371,7 @@ footer {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-6px);
   }
 }
 
@@ -371,32 +380,19 @@ footer {
   display: inline-block;
 }
 
-/* Additional purple accent highlights */
-button:hover,
-.btn:hover {
-  box-shadow: 0 0 15px rgba(204, 0, 255, 0.6) !important;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: 2px solid var(--accent-purple) !important;
-  outline-offset: 2px;
-}
-
-/* List items hover */
+/* ===========================
+   List & Table hovers
+   =========================== */
 .list-group-item:hover {
-  background-color: rgba(204, 0, 255, 0.1) !important;
+  background-color: #e5ecff !important;
   border-left: 3px solid var(--accent-purple) !important;
 }
 
-/* Table row hover */
 .table tbody tr:hover {
-  background-color: rgba(204, 0, 255, 0.1) !important;
+  background-color: #eef2ff !important;
 }
 
 /* Modal close button */
 .btn-close:hover {
-  filter: drop-shadow(0 0 5px var(--accent-purple));
+  filter: drop-shadow(0 0 4px rgba(148, 163, 246, 0.9));
 }
-
